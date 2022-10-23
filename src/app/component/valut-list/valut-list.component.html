@@ -1,0 +1,104 @@
+<div class="container">
+
+  <div class="mt-5">
+  <p-table [value]="lpList">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>LP Pair</th>
+            <th>Protocol</th>
+            <th>Farming APR</th>
+            <th>Liquidity</th>
+            <th style="width:4rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-lp>
+        <tr>
+            <td>{{lp.lpPair}}</td>
+            <td>{{lp.protocol}}</td>
+            <td>{{lp.farmingAPR}}</td>
+            <td>{{lp.liquidity}}</td>
+            <td>
+              <button type="button" class="btn" (click)="selectProduct(lp)"><i class="fa fa-arrow-right fnt_20" aria-hidden="true"></i></button>
+          </td>
+        </tr>
+    </ng-template>
+</p-table>
+</div>
+</div>
+
+
+
+
+<div
+  class="modal fade"
+  id="profile"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="profileModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content cust_modal">
+      <div class="modal_close" data-dismiss="modal" aria-label="Close">
+      </div>
+      <div class="modal-body">
+        <div data-dismiss="modal" aria-label="Close" class="modal_close" (click)="closePopup()">
+          <i class="fa fa-times fr cursor_pointer" aria-hidden="true"></i>
+        </div>
+        <ng-container class="mb-2">
+          <div class="mb-4">
+            <span style="font-weight: 600; font-size: 18px"  >Create Vault</span >
+          </div>
+          <div>
+            <form [formGroup]="valutCreateForm">
+              <div class="form-group row mb-2">
+                <label for="vaultName" class="col-sm-3 col-form-label">Vault Name</label>
+                <div class="col-sm-9">
+                  <input type="password" class="form-control" id="vaultName" placeholder="Vault Name" formControlName="vaultName">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="permission" class="col-sm-3 col-form-label">Permission</label>
+                <div class="col-sm-9">
+                  <input type="password" class="form-control" id="permission" placeholder="Permission" formControlName="permission">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="vaultType" class="col-sm-3 col-form-label">Vault Type</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly class="form-control-plaintext" id="vaultType" formControlName="vaultType">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="lpPair" class="col-sm-3 col-form-label">LP Pair</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly class="form-control-plaintext" id="lpPair" formControlName="lpPair">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="protocol" class="col-sm-3 col-form-label">Protocol</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly class="form-control-plaintext" id="protocol" formControlName="protocol">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="chain" class="col-sm-3 col-form-label">Chain</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly class="form-control-plaintext" id="chain" formControlName="chain">
+                </div>
+              </div>
+              <div class="btn_pos mt-4 mb-2">
+                <div> <button class="btn btn-success" type="button" (click)="deploy()">Deploy</button></div>
+                <div> <button class="btn btn-primary" type="button" (click)="closePopup()">Back</button></div>
+
+              </div>
+            </form>
+          </div>
+        </ng-container>
+       <div>
+       </div>
+
+      </div>
+    </div>
+  </div>
+</div>

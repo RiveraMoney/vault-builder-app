@@ -1,0 +1,61 @@
+<div class="container">
+  <div *ngIf="!isLogin" style="margin-top: 15%; text-align: center">
+    <div>Please connect your wallet to get started.</div>
+    <button class="mb-3" class="btn btn-primary" (click)="connectWallet()">
+      Connect
+    </button>
+  </div>
+
+  <div *ngIf="isLogin">
+    <div *ngIf="!isValutCreated" style="margin-top: 15%; text-align: center">
+      <button class="mb-3" class="btn btn-primary" (click)="createValut()">
+        Create New Vault
+      </button>
+    </div>
+    <div *ngIf="isValutCreated">
+      <div class="row mt-4">
+        <div class="col-md-4 box_outer">
+          <div class="first_section_box1">
+            <div>Asset Holdings</div>
+            <div>$ 150,750.22</div>
+          </div>
+          <div class="second_section_box1 mt-4">
+            <div>
+              <span>Overall Returns</span><br />
+              <span  class="third_text_color">$14,680.12</span><br />
+              <span  class="third_text_color">+36.71%</span>
+            </div>
+            <div>
+              <i class="fa fa-address-book" aria-hidden="true"></i>
+              <i class="fa fa-address-book" aria-hidden="true"></i>
+              <i class="fa fa-address-book" aria-hidden="true"></i>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="second_section_box1 mb-2">
+              <div>BTC</div>
+              <div>4.21</div>
+              <div>ProgressBar</div>
+            </div>
+            <div class="second_section_box1 mb-2">
+              <div>BTC</div>
+              <div>4.21</div>
+              <div>ProgressBar</div>
+            </div>
+            <div class="second_section_box1 mb-2">
+              <div>BTC</div>
+              <div>4.21</div>
+              <div>ProgressBar</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-6"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

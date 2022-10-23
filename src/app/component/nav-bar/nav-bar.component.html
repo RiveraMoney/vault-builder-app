@@ -1,0 +1,11 @@
+
+<p-menubar [model]="items">
+  <ng-template pTemplate="start">
+    <img src="/assets/icon/logo.png" class="logo second_color">
+  </ng-template>
+  <ng-template pTemplate="end">
+  <div class="d-flex second_color">
+      <button type="button"  class="btn btn-cstm clr_white second_color" icon="pi pi-power-off" style="margin-left:.25em;margin-right: 30px;" (click)="disConnect()">{{ account }}</button>
+  </div>
+</ng-template>
+</p-menubar>

@@ -1,1 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
+// *{
+//   background-color: black;
+// }
+body{
+  // background-color: black;
+}
+.fr{
+  float:right;
+}
+.cursor_pointer{
+  cursor: pointer;
+}
+.second_color{
+  background: #262A3D;
+}
+.third_text_color{
+  color: #99CF84;
+}
+.clr_white{
+  color: white;
+}
+
+.box_outer{
+  background: #262A3D;
+  color: white;
+  border-radius: 15px;}
