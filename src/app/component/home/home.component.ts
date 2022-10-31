@@ -33,27 +33,6 @@ export class HomeComponent implements OnInit {
       ],
     },
   };
-  // Web3Modal = window.Web3Modal.default;
-  WalletConnectProvider = window.WalletConnectProvider.default;
-  Fortmatic = window.Fortmatic;
-  evmChains = window.evmChains;
-
-  providerOptions: any = {
-    walletconnect: {
-      package: window.WalletConnectProvider.default,
-      options: {
-        // Mikko's test key - don't copy as your mileage may vary
-        infuraId: '8043bb2cf99347b1bfadfb233c5325c0',
-      },
-    },
-    fortmatic: {
-      package: this.Fortmatic,
-      options: {
-        // Mikko's TESTNET api key
-        key: 'pk_test_391E26A3B43A3350',
-      },
-    },
-  };
 
   // Web3modal instance
   web3Modal: any;
@@ -78,62 +57,8 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     if (this.web3Service.web3Modal.cachedProvider) {
       this.isLogin = true;
-      // setTimeout(() => {
-      //   this.account = sessionStorage.getItem('account');
-      // }, 100);
-      //this.getCakePerBlock();
     }
-    //  this.init();
-    //  if (this.web3Modal.cachedProvider) {
-    //   this.connectWallet();
-    // }
   }
-
-  // public init(){
-  //   const providerOptions = {
-  //     walletconnect: {
-  //       package: this.WalletConnectProvider,
-  //       options: {
-  //         // Mikko's test key - don't copy as your mileage may vary
-  //         infuraId: "27e484dcd9e3efcfd25a83a78777cdf1",
-  //       }
-  //     },
-
-  //     fortmatic: {
-  //       package: this.Fortmatic,
-  //       options: {
-  //         // Mikko's TESTNET api key
-  //         key: "pk_test_391E26A3B43A3350"
-  //       }
-  //     }
-  //   };
-
-  //   this.web3Modal = new Web3Modal({
-  //     cacheProvider: true, // optional
-  //     providerOptions, // required
-  //     //disableInjectedProvider: false, // optional. For MetaMask / Brave / Opera.
-  //   });
-
-  // }
-
-  // public async connectWallet(){
-  //   console.log("Opening a dialog", this.web3Modal);
-  //   try {
-  //     //const instance = await this.web3Modal.connect();
-
-  //     this.provider = await this.web3Modal.connect();
-  //     this.library = new ethers.providers.Web3Provider(this.provider);
-  //     const accounts = await this.library.listAccounts();
-  //     this.account = accounts[0];
-  //     this.network = await this.library.getNetwork();
-  //     this.chainId = this.network.chainId;
-  //     console.log("networ", this.network);
-  //     console.log("chain id", this.chainId);
-  //   } catch(e) {
-  //     console.log("Could not get a wallet connection", e);
-  //     return;
-  //   }
-  // }
 
   public async switchNetwork() {
     try {
@@ -169,26 +94,13 @@ export class HomeComponent implements OnInit {
     return '0x' + val.toString(16);
   }
 
-  // public async disConnect(){
-  //   await this.web3Modal.clearCachedProvider();
-  //   window.location.reload();
-  // }
-
   public connectWallet() {
     this.web3Service.connectWallet().then((e) => {
       window.location.reload();
     });
-    // this.web3Service.connectWallet().then(async e =>{
-    //   const accounts = await e.listAccounts();
-    //   this.account = accounts[0];
-    //   this.network = await e.getNetwork();
-    //   this.chainId = this.network.chainId;
-    //   window.location.reload();
-    // });
   }
   createValut() {
     this.router.navigate(['/valut']);
-    // this.web3Service.disConnect();
   }
 
   public async getCakePerBlock() {
@@ -200,11 +112,11 @@ export class HomeComponent implements OnInit {
     const aa = new ethers.providers.Web3Provider(window.ethereum);
     console.log('library', sessionStorage.getItem('library'));
     const cakeAddress = '0xa5f8C5Dbd5F286960b9d90548680aE5ebFf07652';
-    this.web3Service.getAbiJSON('MasterChefV2Abi.json').subscribe(async (e) => {
+    (await this.web3Service.getAbiJSON('MasterChefV2Abi.json')).subscribe(async (e) => {
       debugger;
       this.cakeAbi = e;
       const daiContract = new ethers.Contract(cakeAddress, this.cakeAbi, aa);
-      console.log('nane', await daiContract['MASTERCHEF_CAKE_PER_BLOCK']());
+      console.log('nane', await daiContract['name']());
     });
   }
 }

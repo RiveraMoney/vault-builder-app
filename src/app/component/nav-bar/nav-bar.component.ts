@@ -57,7 +57,6 @@ export class NavBarComponent implements OnInit {
       this.account = accounts[0];
       this.network = await e.getNetwork();
       this.chainId = this.network.chainId;
-      // window.location.reload();
     });
   }
 

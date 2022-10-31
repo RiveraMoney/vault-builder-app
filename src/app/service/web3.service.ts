@@ -45,7 +45,6 @@ export class Web3Service {
     console.log("Opening a dialog", this.web3Modal);
     try {
       //const instance = await this.web3Modal.connect();
-debugger
       this.provider = await this.web3Modal.connect();
       this.library = new ethers.providers.Web3Provider(this.provider);
       // const libraryString = JSON.stringify(this.library);
@@ -80,9 +79,20 @@ debugger
     return  accounts[0];
   }
 
-  public getAbiJSON(fileName: any): Observable<any> {
+  public async getAbiJSON(fileName: any): Promise<Observable<any>> {
     debugger
-    const url = `./assets/json/abi/${fileName}`
+    const url = `./assets/json/${fileName}`;
     return this.http.get(url);
 }
+
+public async getLpJSON(fileName: any): Promise<Observable<any>> {
+  const url = `https://farms-config.pages.dev/${fileName}`;
+  return this.http.get(url);
+}
+
+
+// public getJSON(): Observable<any> {
+//   return this.http.get("./assets/mydata.json");
+// }
+
 }
