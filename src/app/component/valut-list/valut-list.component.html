@@ -1,21 +1,22 @@
 <div class="container">
 
   <div class="mt-5">
-  <p-table [value]="lpList">
+  <p-table #dt1 [value]="lpList" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]" [loading]="loading">
     <ng-template pTemplate="header">
         <tr>
             <th>LP Pair</th>
             <th>Protocol</th>
-            <th>Farming APR</th>
+            <th pSortableColumn="apr">Farming APR<p-sortIcon field="apr"></p-sortIcon></th>
             <th>Liquidity</th>
             <th style="width:4rem"></th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-lp>
         <tr>
-            <td>{{lp.lpPair}}</td>
-            <td>{{lp.protocol}}</td>
-            <td>{{lp.farmingAPR}}</td>
+            <td>{{lp.lpSymbol}}</td>
+            <td>Pancake</td>
+            <td>{{lp.apr}}</td>
             <td>{{lp.liquidity}}</td>
             <td>
               <button type="button" class="btn" (click)="selectProduct(lp)"><i class="fa fa-arrow-right fnt_20" aria-hidden="true"></i></button>

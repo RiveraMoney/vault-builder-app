@@ -80,7 +80,7 @@ export class Web3Service {
   }
 
   public async getAbiJSON(fileName: any): Promise<Observable<any>> {
-    debugger
+
     const url = `./assets/json/${fileName}`;
     return this.http.get(url);
 }
