@@ -3,7 +3,7 @@
 //   background-color: black;
 // }
 body{
-  // background-color: black;
+  background-color: #1e223f;
 }
 .fr{
   float:right;
@@ -12,7 +12,7 @@ body{
   cursor: pointer;
 }
 .second_color{
-  background: #262A3D;
+  background: #2d325a;
 }
 .third_text_color{
   color: #99CF84;
@@ -24,4 +24,73 @@ body{
 .box_outer{
   background: #262A3D;
   color: white;
-  border-radius: 15px;}
+  border-radius: 15px;
+}
+
+//custom buttom start
+.btn-custom {
+  background-size: 200% auto;
+  background-image: -webkit-linear-gradient( left, #55adff 0%, #a528dd 51%, #55adff );
+  background-image: linear-gradient(to right, #55adff 0%, #a528dd 51%, #55adff);
+  border: 0;
+  color: #fff;
+  outline: none;
+  z-index: 2;
+  transition: all 0.5s ease 0s;
+  // padding: 10px 20px;
+  padding: 5px 25px;
+}
+
+.btn-custom:hover {
+  background-position: right center;
+}
+.btn-custom:hover, .btn-border:hover {
+  color: #fff;
+}
+
+//custom buttom end
+
+
+  //table design start
+  .pTableCustom{
+    background: #2d325a;
+    color: white;
+    border-radius: 25px;
+  }
+  .p-datatable{
+    padding: 30px;
+  }
+  .p-datatable .p-datatable-thead > tr > th{
+    background: #2d325a !important;
+    color: white !important;
+    padding-bottom: 30px !important;
+   }
+
+   .p-datatable .p-datatable-tbody > tr {
+    background: #2d325a!important;
+       color: white!important;
+   }
+   .p-datatable .p-datatable-tbody > tr > td{
+    border-width: 0 0 0 0 !important;
+   }
+   .p-datatable .p-paginator-bottom{
+    border-width: 0 !important;
+    background: #2d325a!important;
+    color: white!important;
+    margin-top: 20px;
+   }
+  //table design end
+
+
+  //modal design start
+  .modal-content {
+    background: #2d325a !important;
+    color: white !important;
+  }
+  .modal-body{
+    padding: 30px;
+  }
+  .form-control-plaintext{
+    color: white;
+  }
+  //modal design end

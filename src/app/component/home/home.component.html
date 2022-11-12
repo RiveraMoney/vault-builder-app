@@ -1,14 +1,14 @@
 <div class="container">
   <div *ngIf="!isLogin" style="margin-top: 15%; text-align: center">
     <div>Please connect your wallet to get started.</div>
-    <button class="mb-3" class="btn btn-primary" (click)="connectWallet()">
+    <button class="mb-3" class="btn btn-custom" (click)="connectWallet()">
       Connect
     </button>
   </div>
 
   <div *ngIf="isLogin">
     <div *ngIf="!isValutCreated" style="margin-top: 15%; text-align: center">
-      <button class="mb-3" class="btn btn-primary" (click)="createValut()">
+      <button class="mb-3" class="btn btn-custom" (click)="createValut()">
         Create New Vault
       </button>
     </div>
