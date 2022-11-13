@@ -1,6 +1,7 @@
 <div class="container">
 
   <div class="mt-5">
+    <div class="pTableCustom">
   <p-table #dt1 [value]="lpList" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]" [loading]="loading">
     <ng-template pTemplate="header">
@@ -19,11 +20,12 @@
             <td>{{lp.apr}}</td>
             <td>{{lp.liquidity}}</td>
             <td>
-              <button type="button" class="btn" (click)="selectProduct(lp)"><i class="fa fa-arrow-right fnt_20" aria-hidden="true"></i></button>
+              <button type="button" class="btn" (click)="selectProduct(lp)"><i class="fa fa-fighter-jet fnt_20 clr_white" aria-hidden="true"></i></button>
           </td>
         </tr>
     </ng-template>
 </p-table>
+</div>
 </div>
 </div>
 
@@ -55,13 +57,24 @@
               <div class="form-group row mb-2">
                 <label for="vaultName" class="col-sm-3 col-form-label">Vault Name</label>
                 <div class="col-sm-9">
-                  <input type="password" class="form-control" id="vaultName" placeholder="Vault Name" formControlName="vaultName">
+                  <input type="input" class="form-control" id="vaultName" placeholder="Vault Name" formControlName="vaultName">
                 </div>
               </div>
-              <div class="form-group row">
+              <div class="form-group row align-items-center">
                 <label for="permission" class="col-sm-3 col-form-label">Permission</label>
-                <div class="col-sm-9">
-                  <input type="password" class="form-control" id="permission" placeholder="Permission" formControlName="permission">
+                <div class="col-sm-4">
+                  <!-- <p-radioButton name="groupname" value="val1" formControlName="permission">a</p-radioButton> -->
+                  <label>
+                    <input type="radio" value="private" formControlName="permission">
+                      <span>Private</span>
+                  </label>
+                </div>
+                <div class="col-sm-4">
+                  <!-- <p-radioButton name="groupname" value="val2" formControlName="permission">b</p-radioButton> -->
+                  <label>
+                    <input type="radio" value="whitelisted" formControlName="permission" [attr.disabled]="true">
+                      <span>Whitelisted</span>
+                  </label>
                 </div>
               </div>
               <div class="form-group row">
@@ -89,8 +102,8 @@
                 </div>
               </div>
               <div class="btn_pos mt-4 mb-2">
-                <div> <button class="btn btn-success" type="button" (click)="deploy()">Deploy</button></div>
-                <div> <button class="btn btn-primary" type="button" (click)="closePopup()">Back</button></div>
+                <div> <button class="btn btn-custom" type="button" (click)="deploy()">Deploy</button></div>
+                <div> <button class="btn btn-custom" type="button" (click)="closePopup()">Back</button></div>
 
               </div>
             </form>

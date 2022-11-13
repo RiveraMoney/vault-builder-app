@@ -12,6 +12,7 @@ import {MenubarModule} from 'primeng/menubar';
 import { ValutListComponent } from './component/valut-list/valut-list.component';
 import {TableModule} from 'primeng/table';
 import { CommonModule } from '@angular/common';
+import {RadioButtonModule} from 'primeng/radiobutton';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     ReactiveFormsModule,
     MenubarModule,
-    TableModule
+    TableModule,
+    RadioButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
