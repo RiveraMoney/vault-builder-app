@@ -25,6 +25,160 @@ enum ChainId {
 export class ValutListComponent implements OnInit {
   loading: boolean = true;
 
+  factoryAbi = [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_chef",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_router",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_pancakeFactory",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "lpPool",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "poolId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "vault",
+          "type": "address"
+        }
+      ],
+      "name": "VaultCreated",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "allVaults",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "poolId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "approvalDelay",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address[]",
+              "name": "rewardToLp0Route",
+              "type": "address[]"
+            },
+            {
+              "internalType": "address[]",
+              "name": "rewardToLp1Route",
+              "type": "address[]"
+            },
+            {
+              "internalType": "string",
+              "name": "tokenName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "tokenSymbol",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct CreateVaultParams",
+          "name": "createVaultParams",
+          "type": "tuple"
+        }
+      ],
+      "name": "createVault",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "vaultAddress",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "getVault",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ];
+
   pairAbi = [
     {
       inputs: [],
@@ -180,9 +334,9 @@ export class ValutListComponent implements OnInit {
   ];
   public valutCreateForm!: FormGroup;
   public lpList: any;
-  public selectedCar: any;
-  public cakeAbi: any;
-  public provider: any;
+  public selectedPool: any;
+  // public cakeAbi: any;
+  public web3Provider: any;
   public lpList2: any;
   public materchefAbi: any = [
     {
@@ -967,9 +1121,7 @@ export class ValutListComponent implements OnInit {
   }
 
   selectProduct(lp: any) {
-
-    this.selectedCar = lp;
-    console.log('product', lp);
+    this.selectedPool = lp;
     this.valutCreateForm.patchValue({
       vaultType: 'Auto-compounding',
       lpPair: lp.lpSymbol,
@@ -982,19 +1134,48 @@ export class ValutListComponent implements OnInit {
   closePopup() {
     $('#profile').modal('hide');
   }
-  deploy() {
+  async deploy() {
 
-    console.log('form', this.valutCreateForm);
+debugger
+    const rewardToLp0Route = ["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.token.address];
+    const rewardToLp1Route = ["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.quoteToken.address];
+    // address = "0x8ba1f109551bD432803012645Ac136ddd64DBA72"
+    // const signer = new ethers.VoidSigner('0x468a5456a89b421770deb79bd1fdad8e9cfbf082', this.provider);
+    const contract = new ethers.Contract(
+      '0x7ae3ccd64c839da8b97da16aecf10921a1e04b71',
+      this.factoryAbi,
+      this.web3Provider.getSigner()
+    );
+    const params = {
+      poolId: BigNumber.from(this.selectedPool.pid),
+      approvalDelay: BigNumber.from(21600),
+      rewardToLp0Route: ["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.token.address],
+      rewardToLp1Route:["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.quoteToken.address],
+      tokenName : this.valutCreateForm.get('vaultName')?.value,
+      tokenSymbol: this.valutCreateForm.get('vaultName')?.value
+    };
+    // contract.connect(this.provider)
+    const poolInfoByAdress = await contract['createVault'](params);
+    // const poolInfoByAdress = await contract['createVault']({
+    //   lpPool: this.selectedPool.lpAddress,
+    //   poolId: this.selectedPool.pid,
+    //   rewardToLp0Route: ["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.token.address],
+    //   rewardToLp1Route:["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.quoteToken.address],
+    //   tokenName : this.valutCreateForm.get('vaultName')?.value,
+    //   tokenSymbol: this.valutCreateForm.get('vaultName')?.value
+    // });
+    console.log('deploy info', poolInfoByAdress);
   }
   public async init() {
     //load abi
-    (await this.web3Service.getAbiJSON('lpAbi.json')).subscribe(async (e) => {
-      this.cakeAbi = e;
-    });
+    // (await this.web3Service.getAbiJSON('lpAbi.json')).subscribe(async (e) => {
+    //   this.cakeAbi = e;
+    // });
 
     //load provider
     await this.web3Service.connectWallet().then((e) => {
-      this.provider = e;
+      this.web3Provider = e;
+      // console.log("this.web3Provider sahillllllll", this.web3Provider);
     });
 
     //load cake price
@@ -1004,7 +1185,7 @@ export class ValutListComponent implements OnInit {
 
     //get farm list
     (await this.web3Service.getLpJSON('56.json')).subscribe(async (e) => {
-      this.lpList2 = e;
+      this.lpList2 = e.slice(0,5);
       // this.fetchMasterChefV2Data();
       this.setupPooldata();
     });
@@ -1034,7 +1215,7 @@ export class ValutListComponent implements OnInit {
       const contract = new ethers.Contract(
         e.address,
         this.masterChefV2Abi,
-        this.provider
+        this.web3Provider
       );
       let poolInfoByAdress: any;
       if (e.params) {
@@ -1146,7 +1327,7 @@ debugger
       const contract = new ethers.Contract(
         e.address,
         this.materchefAbi,
-        this.provider
+        this.web3Provider
       );
       const poolInfoByAdress = await contract['poolInfo'](e.params);
       return poolInfoByAdress;
@@ -1191,7 +1372,7 @@ debugger
       const contract = new ethers.Contract(
         e.address,
         this.stableSwapAbi,
-        this.provider
+        this.web3Provider
       );
       const poolInfoByAdress = await contract[e.name].apply(this, e.params);
       return poolInfoByAdress;
@@ -1250,7 +1431,7 @@ debugger
       const contract = new ethers.Contract(
         e.address,
         this.publicFarmAbi,
-        this.provider
+        this.web3Provider
       );
       const poolInfoByAdress = await contract[e.name].apply(this, e.params);
       return poolInfoByAdress;
@@ -1688,7 +1869,9 @@ debugger
     //   this.masterChefV2Abi,
     //   this.provider
     // );
-    const pairContract = new ethers.Contract(pairConfig.address, this.pairAbi, this.provider)
+    debugger
+    const pairContract = new ethers.Contract(pairConfig.address, this.pairAbi, this.web3Provider);
+    debugger
     const reserves = await pairContract['getReserves']()
     const { reserve0, reserve1 } = reserves
     const { tokenA, tokenB } = pairConfig
