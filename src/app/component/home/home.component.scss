@@ -11,3 +11,32 @@
     justify-content: space-between;
     align-items: center;
 }
+.btn_cstm{
+  border: 1px solid lightgreen;
+  border-radius: 10px;
+  color: white;
+  width: 110px;
+  height: 35px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+:host ::ng-deep .p-button {
+  margin: 0 .5rem 0 0;
+  min-width: 10rem;
+}
+
+.confirmation-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host ::ng-deep .p-dialog .p-button {
+  min-width: 6rem;
+}
+.btn_pos{
+  display: flex;
+  justify-content: space-evenly;
+}

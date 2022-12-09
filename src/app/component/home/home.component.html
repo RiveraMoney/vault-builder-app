@@ -50,45 +50,156 @@
           </div>
         </div>
         <div class="col-md-8">
-          <div class="row">
-            <div class="col-md-6"></div>
-            <div class="col-md-6 box_outer">
-              <div class="first_section_box1">
-                <div>Asset Holdings</div>
-                <div>$ 150,750.22</div>
-              </div>
-              <div class="second_section_box1 mt-4">
-                <div>
-                  <span>Overall Returns</span><br />
-                  <span  class="third_text_color">$14,680.12</span><br />
-                  <span  class="third_text_color">+36.71%</span>
+          <div class="row" style="justify-content: space-evenly;">
+              <div class="col-md-5 box_outer">
+                <div class="first_section_box1">
+                  <div>Asset Holdings</div>
+                  <div>$ 150,750.22</div>
                 </div>
-                <div>
-                  <i class="fa fa-address-book" aria-hidden="true"></i>
-                  <i class="fa fa-address-book" aria-hidden="true"></i>
-                  <i class="fa fa-address-book" aria-hidden="true"></i>
+                <div class="second_section_box1 mt-4">
+                  <div>
+                    <span>Overall Returns</span><br />
+                    <span  class="third_text_color">$14,680.12</span><br />
+                    <span  class="third_text_color">+36.71%</span>
+                  </div>
+                  <div>
+                    <i class="fa fa-address-book" aria-hidden="true"></i>
+                    <i class="fa fa-address-book" aria-hidden="true"></i>
+                    <i class="fa fa-address-book" aria-hidden="true"></i>
+                  </div>
                 </div>
-              </div>
-              <div class="mt-4">
-                <div class="second_section_box1 mb-2">
-                  <div>BTC</div>
-                  <div>4.21</div>
-                  <div>ProgressBar</div>
-                </div>
-                <div class="second_section_box1 mb-2">
-                  <div>BTC</div>
-                  <div>4.21</div>
-                  <div>ProgressBar</div>
-                </div>
-                <div class="second_section_box1 mb-2">
-                  <div>BTC</div>
-                  <div>4.21</div>
-                  <div>ProgressBar</div>
+                <div class="mt-5" style="display: flex;justify-content: space-around;">
+                 <div>
+                  <button class="btn btn_cstm" (click)="showBasicDialog()">Deposit</button>
+                 </div>
+                 <div>
+                  <button class="btn btn_cstm" (click)="withdraw()">Withdraw</button>
+                 </div>
                 </div>
               </div>
-            </div>
+              <div class="col-md-5 box_outer">
+                <div class="first_section_box1">
+                  <div>Asset Holdings</div>
+                  <div>$ 150,750.22</div>
+                </div>
+                <div class="second_section_box1 mt-4">
+                  <div>
+                    <span>Overall Returns</span><br />
+                    <span  class="third_text_color">$14,680.12</span><br />
+                    <span  class="third_text_color">+36.71%</span>
+                  </div>
+                  <div>
+                    <i class="fa fa-address-book" aria-hidden="true"></i>
+                    <i class="fa fa-address-book" aria-hidden="true"></i>
+                    <i class="fa fa-address-book" aria-hidden="true"></i>
+                  </div>
+                </div>
+                <div class="mt-4">
+                  <div class="second_section_box1 mb-2">
+                    <div>BTC</div>
+                    <div>4.21</div>
+                    <div>ProgressBar</div>
+                  </div>
+                  <div class="second_section_box1 mb-2">
+                    <div>BTC</div>
+                    <div>4.21</div>
+                    <div>ProgressBar</div>
+                  </div>
+                  <div class="second_section_box1 mb-2">
+                    <div>BTC</div>
+                    <div>4.21</div>
+                    <div>ProgressBar</div>
+                  </div>
+                </div>
+              </div>
           </div>
+
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div
+  class="modal fade"
+  id="profile"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="profileModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content cust_modal">
+      <div class="modal_close" data-dismiss="modal" aria-label="Close">
+      </div>
+      <div class="modal-body">
+        <div data-dismiss="modal" aria-label="Close" class="modal_close" (click)="closePopup()">
+          <i class="fa fa-times fr cursor_pointer" aria-hidden="true"></i>
+        </div>
+        <ng-container class="mb-2">
+          <div class="mb-4">
+            <span style="font-weight: 600; font-size: 18px"  >Deposit LP</span >
+          </div>
+          <div>
+            <form [formGroup]="valutCreateForm">
+              <div class="form-group row mb-2">
+                <label for="vaultName" class="col-sm-3 col-form-label">Amount</label>
+                <div class="col-sm-9">
+                  <input type="input" class="form-control" id="vaultName" placeholder="Amount" formControlName="amount">
+                </div>
+              </div>
+              <!-- <div class="form-group row align-items-center">
+                <label for="permission" class="col-sm-3 col-form-label">Permission</label>
+                <div class="col-sm-4">
+                  <label>
+                    <input type="radio" value="private" formControlName="permission">
+                      <span>Private</span>
+                  </label>
+                </div>
+                <div class="col-sm-4">
+                  <label>
+                    <input type="radio" value="whitelisted" formControlName="permission" [attr.disabled]="true">
+                      <span>Whitelisted</span>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="vaultType" class="col-sm-3 col-form-label">Vault Type</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly class="form-control-plaintext" id="vaultType" formControlName="vaultType">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="lpPair" class="col-sm-3 col-form-label">LP Pair</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly class="form-control-plaintext" id="lpPair" formControlName="lpPair">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="protocol" class="col-sm-3 col-form-label">Protocol</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly class="form-control-plaintext" id="protocol" formControlName="protocol">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="chain" class="col-sm-3 col-form-label">Chain</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly class="form-control-plaintext" id="chain" formControlName="chain">
+                </div>
+              </div> -->
+              <div class="btn_pos mt-4 mb-2">
+                <div> <button class="btn btn-custom" type="button" (click)="approve()">Approve</button></div>
+                <div> <button class="btn btn-custom" type="button" (click)="checkApproval()">Check</button></div>
+                <div> <button class="btn btn-custom" type="button" (click)="deposit()">Deposit</button></div>
+
+              </div>
+            </form>
+          </div>
+        </ng-container>
+       <div>
+       </div>
+
       </div>
     </div>
   </div>
