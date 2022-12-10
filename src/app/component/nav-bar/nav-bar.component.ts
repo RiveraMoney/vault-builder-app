@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { Web3Service } from 'src/app/service/web3.service';
 
@@ -15,7 +16,7 @@ export class NavBarComponent implements OnInit {
   chainId: any;
   provider: any;
 
-  constructor(private web3Service:Web3Service) {
+  constructor(private web3Service:Web3Service,private router: Router) {
     this.items = [
     //   {
     //     label:'Home',
@@ -43,6 +44,7 @@ export class NavBarComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.web3Service.web3Modal.cachedProvider){
+
       this.connectWallet();
     }
   }
@@ -53,6 +55,7 @@ export class NavBarComponent implements OnInit {
 
   public async connectWallet(){
     await this.web3Service.connectWallet().then(async e =>{
+
       const accounts = await e.listAccounts();
       this.account = accounts[0];
       this.network = await e.getNetwork();
@@ -63,6 +66,11 @@ export class NavBarComponent implements OnInit {
 
   disConnect(){
     this.web3Service.disConnect();
+  }
+
+  gotoDashBoard(){
+
+    this.router.navigate(['/']);
   }
 
 }

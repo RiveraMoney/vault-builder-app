@@ -1,6 +1,6 @@
 <div class="container">
   <div *ngIf="!isLogin" style="margin-top: 15%; text-align: center">
-    <div>Please connect your wallet to get started.</div>
+    <div class="cnt_btn_txt">Please connect your wallet to get started.</div>
     <button class="mb-3" class="btn btn-custom" (click)="connectWallet()">
       Connect
     </button>
@@ -51,65 +51,34 @@
         </div>
         <div class="col-md-8">
           <div class="row" style="justify-content: space-evenly;">
-              <div class="col-md-5 box_outer">
-                <div class="first_section_box1">
-                  <div>Asset Holdings</div>
-                  <div>$ 150,750.22</div>
+              <div class="col-md-5 box_outer" style="padding: 22px;" *ngFor="let adress of valutAddressList">
+                <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
+                  <div><img src="assets/icon/networkIcon.png" style="    width: 30px;
+                    margin-right: 16px;"> ETH -USDC/ACC</div>
+                  <div><img src="assets/icon/ShareNetwork.png" style="width: 25px;"> </div>
                 </div>
-                <div class="second_section_box1 mt-4">
-                  <div>
-                    <span>Overall Returns</span><br />
-                    <span  class="third_text_color">$14,680.12</span><br />
-                    <span  class="third_text_color">+36.71%</span>
-                  </div>
-                  <div>
-                    <i class="fa fa-address-book" aria-hidden="true"></i>
-                    <i class="fa fa-address-book" aria-hidden="true"></i>
-                    <i class="fa fa-address-book" aria-hidden="true"></i>
-                  </div>
+                <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
+                  <div>Auto-compounding vault</div>
+                  <div> Whitelisted</div>
                 </div>
-                <div class="mt-5" style="display: flex;justify-content: space-around;">
+                <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
+                  <div>Balance <br>$2,305.02</div>
+                  <div> Current APY <br> 20.8%</div>
+                </div>
+                <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-4">
+                  <div>Assets <br><img src="assets/icon/assets.png" style="    width: 40px;
+                    margin-right: 16px;"></div>
+                  <div> Protocols <br><img src="assets/icon/assets.png" style="    width: 40px;
+                    margin-right: 16px;"></div>
+                </div>
+
+                <div  style="display: flex;justify-content: space-around;">
                  <div>
-                  <button class="btn btn_cstm" (click)="showBasicDialog()">Deposit</button>
+                  <button class="btn btn_cstm" (click)="showBasicDialog(adress)">Deposit</button>
                  </div>
                  <div>
                   <button class="btn btn_cstm" (click)="withdraw()">Withdraw</button>
                  </div>
-                </div>
-              </div>
-              <div class="col-md-5 box_outer">
-                <div class="first_section_box1">
-                  <div>Asset Holdings</div>
-                  <div>$ 150,750.22</div>
-                </div>
-                <div class="second_section_box1 mt-4">
-                  <div>
-                    <span>Overall Returns</span><br />
-                    <span  class="third_text_color">$14,680.12</span><br />
-                    <span  class="third_text_color">+36.71%</span>
-                  </div>
-                  <div>
-                    <i class="fa fa-address-book" aria-hidden="true"></i>
-                    <i class="fa fa-address-book" aria-hidden="true"></i>
-                    <i class="fa fa-address-book" aria-hidden="true"></i>
-                  </div>
-                </div>
-                <div class="mt-4">
-                  <div class="second_section_box1 mb-2">
-                    <div>BTC</div>
-                    <div>4.21</div>
-                    <div>ProgressBar</div>
-                  </div>
-                  <div class="second_section_box1 mb-2">
-                    <div>BTC</div>
-                    <div>4.21</div>
-                    <div>ProgressBar</div>
-                  </div>
-                  <div class="second_section_box1 mb-2">
-                    <div>BTC</div>
-                    <div>4.21</div>
-                    <div>ProgressBar</div>
-                  </div>
                 </div>
               </div>
           </div>
@@ -204,3 +173,4 @@
     </div>
   </div>
 </div>
+<p-toast></p-toast>

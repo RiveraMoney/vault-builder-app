@@ -12,7 +12,7 @@
     align-items: center;
 }
 .btn_cstm{
-  border: 1px solid lightgreen;
+  border: 1px solid #8B54EA;
   border-radius: 10px;
   color: white;
   width: 110px;
@@ -39,4 +39,9 @@
 .btn_pos{
   display: flex;
   justify-content: space-evenly;
+}
+.cnt_btn_txt{
+  color: white;
+  font-size: 20px;
+  margin-bottom: 20px;
 }

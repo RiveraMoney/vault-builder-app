@@ -1801,7 +1801,7 @@ export class ValutListComponent implements OnInit {
   }
   async deploy() {
 
-debugger
+
     const rewardToLp0Route = ["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.token.address];
     const rewardToLp1Route = ["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.quoteToken.address];
     // address = "0x8ba1f109551bD432803012645Ac136ddd64DBA72"
@@ -1821,14 +1821,6 @@ debugger
     };
     // contract.connect(this.provider)
     const poolInfoByAdress = await contract['createVault'](params);
-    // const poolInfoByAdress = await contract['createVault']({
-    //   lpPool: this.selectedPool.lpAddress,
-    //   poolId: this.selectedPool.pid,
-    //   rewardToLp0Route: ["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.token.address],
-    //   rewardToLp1Route:["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.quoteToken.address],
-    //   tokenName : this.valutCreateForm.get('vaultName')?.value,
-    //   tokenSymbol: this.valutCreateForm.get('vaultName')?.value
-    // });
     console.log('deploy info', poolInfoByAdress);
   }
 
@@ -1951,7 +1943,7 @@ debugger
             token1Decimals: farm.quoteToken.decimals,
           });
         }
-debugger
+
         const val3 = this.getFarmAllocation({
           allocPoint: this.poolInfos[index]?.allocPoint,
           isRegular: this.poolInfos[index]?.isRegular,
@@ -1963,7 +1955,7 @@ debugger
           ...val,
           ...val3,
         };
-        debugger
+
         return obj;
       } catch (error) {
         console.error(error, farm, index, {
@@ -1986,7 +1978,7 @@ debugger
   }
 
   public async fetchMasterChefData() {
-    debugger
+
     let poolinfo = this.lpList2.map((farm: any) =>
       this.masterChefFarmCalls(farm, this.masterChefAddress)
     );
@@ -2093,7 +2085,7 @@ debugger
         '0xE6c904424417D03451fADd6E3f5b6c26BcC43841'
       )
     );
-    debugger
+
     const chunkSize = farmCalls.length / farms.length;
     const results = farmCalls.map(async (e: any) => {
       const contract = new ethers.Contract(
@@ -2226,7 +2218,7 @@ debugger
     token0Decimals: number;
     token1Decimals: number;
   }) => {
-    debugger
+
     // Raw amount of token in the LP, including those not staked
     const tokenAmountTotal = this.getTokenAmount(
       tokenBalanceLP,
@@ -2509,7 +2501,7 @@ debugger
 
   //get cake price in usdt
   getCakePrice = async (isTestnet: boolean) => {
-    debugger
+
     const cakeBse = new ERC20Token(
       ChainId.BSC,
       '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82',
@@ -2537,9 +2529,9 @@ debugger
     //   this.masterChefV2Abi,
     //   this.provider
     // );
-    debugger
+
     const pairContract = new ethers.Contract(pairConfig.address, this.pairAbi, this.web3Provider);
-    debugger
+
     const reserves = await pairContract['getReserves']()
     const { reserve0, reserve1 } = reserves
     const { tokenA, tokenB } = pairConfig

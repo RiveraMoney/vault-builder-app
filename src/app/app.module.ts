@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import {DialogModule} from 'primeng/dialog';
 import {ButtonModule} from 'primeng/button';
+import {ToastModule} from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import {ButtonModule} from 'primeng/button';
     TableModule,
     RadioButtonModule,
     DialogModule,
-    ButtonModule
+    ButtonModule,
+    ToastModule
   ],
   providers: [],
   bootstrap: [AppComponent]

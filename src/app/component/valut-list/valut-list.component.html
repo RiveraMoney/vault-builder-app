@@ -1,13 +1,19 @@
 <div class="container">
 
   <div class="mt-5">
+    <div style="color: white;
+    margin-left: 5px;
+    margin-bottom: 30px;
+    font-size: 22px;
+    text-align: center;">Create auto-compounding vault</div>
     <div class="pTableCustom">
+      <div style="padding-top: 40px;padding-left: 40px;font-size: 18px;">Select LP Pool to add liquidity </div>
   <p-table #dt1 [value]="lpList" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]" [loading]="loading">
     <ng-template pTemplate="header">
         <tr>
             <th>LP Pair</th>
-            <th>Protocol</th>
+            <th>DEX</th>
             <th pSortableColumn="apr">Farming APR<p-sortIcon field="apr"></p-sortIcon></th>
             <th>Liquidity</th>
             <th style="width:4rem"></th>
@@ -16,11 +22,11 @@
     <ng-template pTemplate="body" let-lp>
         <tr>
             <td>{{lp.lpSymbol}}</td>
-            <td>Pancake</td>
+            <td>Pancakeswap</td>
             <td>{{lp.apr}}</td>
             <td>{{lp.liquidity}}</td>
             <td>
-              <button type="button" class="btn" (click)="selectProduct(lp)"><i class="fa fa-fighter-jet fnt_20 clr_white" aria-hidden="true"></i></button>
+              <button type="button" class="btn btn_cstm" (click)="selectProduct(lp)">Select <i class="fa fa-fighter-jet fnt_16 clr_white" aria-hidden="true" style="margin-left: 8px;"></i></button>
           </td>
         </tr>
     </ng-template>
