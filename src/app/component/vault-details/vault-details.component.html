@@ -1,41 +1,76 @@
 <div class="container">
+    <div class="mt-5 mb-5">
+        <div style="color: white;
+        margin-left: 5px;
+        margin-bottom: 10px;
+        font-size: 22px;
+        text-align: center;">Create auto-compounding vault</div>
+        <div class="text-center" style="color: white;">Choose protocol to farm LP tokens</div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="row" style="align-items: center;
+            justify-content: space-between;">
+                <div class="col-md-6">
+                    <div style="    background: #2d325a;
+                    color: white;
+                    padding: 20px;
+                    border-radius: 15px;">
+                        <div class="row" style="display: flex;
+                        justify-content: space-between;
+                        align-items: center;">
+                            <div class="col-md-8">
+                                <div>
+                                    <img src="assets/icon/pancake.png">
+                                    <span>Pancakeswap</span>
+                                    <span style="    background: linear-gradient(90deg, #003F79 0%, #5E309B 100%);
+                                    padding: 10px;
+                                    margin-left: 12px;
+                                    border-radius: 10px;">{{aprValue}}%</span>
+                                </div>
+                                <div>
+                                    Take advantage of high-yield LPs without getting exposure to the assets. Maximise your returns on the blue-chip coins.
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn_cstm" (click)="selectLp()">Select</button>
+                            </div>
+                        </div>
 
-  <div class="mt-5">
-    <div style="color: white;
-    margin-left: 5px;
-    margin-bottom: 30px;
-    font-size: 22px;
-    text-align: center;">Create auto-compounding vault</div>
-    <div class="pTableCustom">
-      <div style="padding-top: 40px;padding-left: 40px;font-weight: 600;">Select LP Pool to add liquidity </div>
-  <p-table #dt1 [value]="lpList" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
-  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]" [loading]="loading">
-    <ng-template pTemplate="header">
-        <tr>
-            <th>LP Pair</th>
-            <th>DEX</th>
-            <th pSortableColumn="apr">Farming APR<p-sortIcon field="apr"></p-sortIcon></th>
-            <th>Liquidity</th>
-            <th style="width:4rem"></th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-lp>
-        <tr>
-            <td>{{lp.lpSymbol}}</td>
-            <td>Pancakeswap</td>
-            <td>{{lp.apr}}</td>
-            <td>{{lp.liquidity}}</td>
-            <td>
-              <button type="button" class="btn btn_cstm" (click)="selectProduct(lp)">Select <i class="fa fa-fighter-jet fnt_16 clr_white" aria-hidden="true" style="margin-left: 8px;"></i></button>
-          </td>
-        </tr>
-    </ng-template>
-</p-table>
-</div>
-</div>
-</div>
+                    </div>
+                </div>
+                <div class="col-md-6" style="cursor: no-drop;" [attr.disabled]="true">
+                    <div style="    background: #2d325a;
+                    color: white;
+                    padding: 20px;
+                    border-radius: 15px;">
+                        <div class="row" style="display: flex;
+                        justify-content: space-between;
+                        align-items: center;">
+                            <div class="col-md-8">
+                                <div>
+                                    <img src="assets/icon/pancake.png">
+                                    <span>ONI Protocol</span>
+                                    <span style="    background: linear-gradient(90deg, #003F79 0%, #5E309B 100%);
+                                    padding: 10px;
+                                    margin-left: 12px;
+                                    border-radius: 10px;">{{aprValue}}%</span>
+                                </div>
+                                <div>
+                                    Take advantage of high-yield LPs without getting exposure to the assets. Maximise your returns on the blue-chip coins.
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn_cstm">Select</button>
+                            </div>
+                        </div>
 
-
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div
@@ -96,7 +131,7 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label for="protocol" class="col-sm-3 col-form-label">Protocol</label>
+                <label for="protocol" class="col-sm-3 col-form-label">DEX</label>
                 <div class="col-sm-9">
                   <input type="text" readonly class="form-control-plaintext" id="protocol" formControlName="protocol">
                 </div>
@@ -122,3 +157,4 @@
     </div>
   </div>
 </div>
+<p-toast></p-toast>

@@ -8,8 +8,19 @@
 :host::ng-deep.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link{
 background: #2d325a;
   border-radius: 0;
+  box-shadow: none;
 }
 .logo{
   width: 115px;
 }
 
+:host::ng-deep .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-menuitem-text {
+  color: white;
+}
+:host::ng-deep .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link:not(.p-disabled):hover{
+ background: transparent;
+}
+
+:host::ng-deep .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link:not(.p-disabled):hover .p-menuitem-text{
+ color: #8B54EA;
+}

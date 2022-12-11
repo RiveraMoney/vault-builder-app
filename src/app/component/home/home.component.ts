@@ -14,7 +14,6 @@ declare var $: any;
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  providers: [MessageService]
 })
 export class HomeComponent implements OnInit {
   networkParams: any = {
@@ -55,6 +54,8 @@ export class HomeComponent implements OnInit {
   isValutCreated = false;
   cakeAbi: any;
   isLogin = false;
+  isApprove = false;
+  isDeposit = true;
   public web3Provider: any;
   public valutAddress: any;
   public valutAddressList: any[] = [];
@@ -75,9 +76,10 @@ export class HomeComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.valutCreateForm = this.fb.group({
       amount: [''],
+      permission: ['private'],
     });
     if (this.web3Service.web3Modal.cachedProvider) {
-      debugger
+
       this.isLogin = true;
       await this.getAbiValue();
       await this.loadprovider();
@@ -135,6 +137,17 @@ export class HomeComponent implements OnInit {
     const contract = this.getContract(this.globalService.deployedContract,this.factoryAbi,this.web3Provider.getSigner());
 
     this.valutAddressList = await contract['listAllVaults']();
+
+    this.valutAddressList = this.valutAddressList.map(async e =>{
+      const contract = this.getContract(e,this.valutAbi,this.web3Provider.getSigner());
+      const balance = await contract['balance']();
+      return {
+        "address": e,
+        "balance": balance
+      };
+    });
+
+    debugger
     if(this.valutAddressList.length > 0){
       this.isValutCreated = true;
     }
@@ -145,39 +158,60 @@ export class HomeComponent implements OnInit {
   async deposit(){
     const contract = this.getContract(this.valutAddress,this.valutAbi,this.web3Provider.getSigner());
     try {
-      debugger
-      const transaction = await contract['deposit'](BigNumber.from(+this.valutCreateForm.get('amount')?.value));
-      console.log("owner", transaction);
+      await contract['deposit'](BigNumber.from(+this.valutCreateForm.get('amount')?.value));
+      $('#depositModal').modal('hide');
     } catch (err: any) {
-      debugger
       this.showError(err.message)
-      console.log('revert reason:', err.message);
     }
   }
 
   async withdraw(){
-    const contract = new ethers.Contract(
-      this.globalService.deployedContract,
-      this.factoryAbi,
-      this.web3Provider.getSigner()
-    );
-
-    const withdraw = await contract['withdraw']();
-    // const transaction = await contract['deposit'](this.valutAddress, { value: ethers.utils.parseEther("0.1") })
+    const contract = this.getContract(this.valutAddress,this.valutAbi,this.web3Provider.getSigner());
+    try {
+    await contract['withdraw'](BigNumber.from(+this.valutCreateForm.get('amount')?.value));
+    $('#depositModal').modal('hide');
+  } catch (err: any) {
+    this.showError(err.message)
+  }
   }
 
-  async showBasicDialog(address: any) {
+  async showBasicDialog(address: any, type: any) {
+    this.isDeposit = type == 'deposit' ? true : false;
+    // if(type == 'deposit'){
+    //   this.isDeposit = true;
+    // } else{
+    //   this.isDeposit = false;
+    // }
     this.valutAddress = address;
     this.displayBasic = true;
-    $('#profile').modal('show');
+    // const contract = this.getContract(this.valutAddress,this.valutAbi,this.web3Provider.getSigner());
+    // const balance = await contract['balance']();
+    // console.log("balance", balance);
+
+    const accountContract = this.getContract('0x804678fa97d91B974ec2af3c843270886528a9E6',this.lpAbi, this.web3Provider.getSigner());
+  const allowance = await accountContract['allowance'](sessionStorage.getItem("account"),this.valutAddress);
+  if(+ethers.utils.formatEther(allowance) > 0){
+    this.isApprove = true;
+  }
+  console.log('allowance', ethers.utils.formatEther(allowance));
+  console.log('allowance2', BigNumber.from(allowance));
+
+    $('#depositModal').modal('show');
 }
 
 async approve(){
   const contract = this.getContract('0x804678fa97d91B974ec2af3c843270886528a9E6', this.lpAbi, this.web3Provider.getSigner());
-  const withdraw = await contract['approve'](this.valutAddress, BigNumber.from(this.valutCreateForm.get('amount')?.value));
-  withdraw.then((e:any) =>{
-    this.checkApproval();
-  }).catch((err: any) => alert(err));
+  try{
+  const amount = 1000000000000000;
+  const withdraw = await contract['approve'](this.valutAddress, BigNumber.from(amount));
+  this.isApprove = true;
+} catch (err: any) {
+  this.showError(err.message)
+      console.log('revert reason:', err.message);
+}
+  // withdraw.then((e:any) =>{
+  //   this.checkApproval();
+  // }).catch((err: any) => alert(err));
 }
 
 async checkApproval(){
@@ -189,7 +223,7 @@ async checkApproval(){
 }
 
 closePopup() {
-  $('#profile').modal('hide');
+  $('#depositModal').modal('hide');
 }
 
 

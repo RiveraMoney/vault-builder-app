@@ -16,13 +16,16 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 import {DialogModule} from 'primeng/dialog';
 import {ButtonModule} from 'primeng/button';
 import {ToastModule} from 'primeng/toast';
+import { VaultDetailsComponent } from './component/vault-details/vault-details.component';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     NavBarComponent,
-    ValutListComponent
+    ValutListComponent,
+    VaultDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -39,7 +42,7 @@ import {ToastModule} from 'primeng/toast';
     ButtonModule,
     ToastModule
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

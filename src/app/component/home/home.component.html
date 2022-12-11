@@ -8,53 +8,80 @@
 
   <div *ngIf="isLogin">
     <div *ngIf="!isValutCreated" style="margin-top: 15%; text-align: center">
+      <div class="cnt_btn_txt">This wallet address is not whitelisted in any Rivera vault.</div>
       <button class="mb-3" class="btn btn-custom" (click)="createValut()">
         Create New Vault
       </button>
     </div>
     <div *ngIf="isValutCreated">
+      <!-- <div>
+      <button class="mb-3" class="btn btn-custom" (click)="createValut()">
+        Create New Vault
+      </button>
+    </div> -->
       <div class="row mt-4">
         <div class="col-md-4 box_outer">
-          <div class="first_section_box1">
+          <div class="first_section_box1 first_section_box1_back_img">
             <div>Asset Holdings</div>
             <div>$ 150,750.22</div>
           </div>
-          <div class="second_section_box1 mt-4">
+          <div class="second_section_box1 mt-4" style="padding: 5px 10px;">
             <div>
               <span>Overall Returns</span><br />
               <span  class="third_text_color">$14,680.12</span><br />
               <span  class="third_text_color">+36.71%</span>
             </div>
             <div>
-              <i class="fa fa-address-book" aria-hidden="true"></i>
-              <i class="fa fa-address-book" aria-hidden="true"></i>
-              <i class="fa fa-address-book" aria-hidden="true"></i>
+             <img src="assets/icon/dollar_round.png" style="width: 35px;margin-right: 5px;">
+             <img src="assets/icon/btc_round.png" style="width: 35px;margin-right: 5px;">
+             <img src="assets/icon/eth_round.png" style="width: 35px;">
             </div>
           </div>
-          <div class="mt-4">
-            <div class="second_section_box1 mb-2">
-              <div>BTC</div>
+          <div class="mt-4" style="padding: 5px 10px;font-size: 14px;">
+            <div class="second_section_box1 mb-4">
+              <div><img src="assets/icon/btc_clr_round.png" style="width: 25px;margin-right: 6px;"> BTC</div>
+              <!-- <div>BTC</div> -->
+              <div>Bitcoin</div>
               <div>4.21</div>
-              <div>ProgressBar</div>
+              <div>$ 79,990.22</div>
             </div>
-            <div class="second_section_box1 mb-2">
-              <div>BTC</div>
-              <div>4.21</div>
-              <div>ProgressBar</div>
+            <div class="second_section_box1 mb-4">
+              <div><img src="assets/icon/eth_clr_round.png" style="width: 25px;margin-right: 6px;"> ETH</div>
+              <!-- <div>ETH</div> -->
+              <div>Ethereum</div>
+              <div>20.50</div>
+              <div>$ 30,750.34</div>
             </div>
-            <div class="second_section_box1 mb-2">
-              <div>BTC</div>
-              <div>4.21</div>
-              <div>ProgressBar</div>
+            <div class="second_section_box1 mb-4">
+              <div><img src="assets/icon/thether_clr_round.png" style="width: 25px;margin-right: 6px;"> USDT</div>
+              <!-- <div>USDT</div> -->
+              <div>Tether</div>
+              <div>7,500.00</div>
+              <div>$ 7,500.00</div>
+            </div>
+            <div class="second_section_box1 mb-4">
+              <div><img src="assets/icon/matic_clr_round.png" style="width: 25px;margin-right: 6px;"> MATIC</div>
+              <!-- <div>MATIC</div> -->
+              <div>Polygon</div>
+              <div>7,326.00</div>
+              <div>$ 5,860.81</div>
+            </div>
+            <div class="second_section_box1 mb-4">
+              <div><img src="assets/icon/sol_clr_round.png" style="width: 25px;margin-right: 6px;"> SOL</div>
+              <!-- <div>SOL</div> -->
+              <div>Solana</div>
+              <div>187.22</div>
+              <div>$ 5,429.58</div>
             </div>
           </div>
         </div>
         <div class="col-md-8">
           <div class="row" style="justify-content: space-evenly;">
-              <div class="col-md-5 box_outer" style="padding: 22px;" *ngFor="let adress of valutAddressList">
+              <div class="col-md-5 box_outer" style="padding: 22px;" *ngFor="let valut of valutAddressList">
+                <!-- {{valut.__zone_symbol__value | json}} -->
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
                   <div><img src="assets/icon/networkIcon.png" style="    width: 30px;
-                    margin-right: 16px;"> ETH -USDC/ACC</div>
+                    margin-right: 16px;"> CAKE -USDC/ACC</div>
                   <div><img src="assets/icon/ShareNetwork.png" style="width: 25px;"> </div>
                 </div>
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
@@ -62,7 +89,7 @@
                   <div> Whitelisted</div>
                 </div>
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
-                  <div>Balance <br>$2,305.02</div>
+                  <div>Balance <br>{{valut?.__zone_symbol__value?.balance}}</div>
                   <div> Current APY <br> 20.8%</div>
                 </div>
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-4">
@@ -74,10 +101,10 @@
 
                 <div  style="display: flex;justify-content: space-around;">
                  <div>
-                  <button class="btn btn_cstm" (click)="showBasicDialog(adress)">Deposit</button>
+                  <button class="btn btn_cstm" (click)="showBasicDialog(valut?.__zone_symbol__value?.address, 'deposit')">Deposit</button>
                  </div>
                  <div>
-                  <button class="btn btn_cstm" (click)="withdraw()">Withdraw</button>
+                  <button class="btn btn_cstm" (click)="showBasicDialog(valut?.__zone_symbol__value?.address, 'withdraw')">Withdraw</button>
                  </div>
                 </div>
               </div>
@@ -92,7 +119,7 @@
 
 <div
   class="modal fade"
-  id="profile"
+  id="depositModal"
   tabindex="-1"
   role="dialog"
   aria-labelledby="profileModalLabel"
@@ -108,31 +135,40 @@
         </div>
         <ng-container class="mb-2">
           <div class="mb-4">
-            <span style="font-weight: 600; font-size: 18px"  >Deposit LP</span >
+            <span style="font-weight: 600" *ngIf="isDeposit">Deposit your LP or ZAP in ETH or USDC</span >
+              <span style="font-weight: 600" *ngIf="!isDeposit">Withdraw your LP or ZAP in ETH or USDC</span >
           </div>
           <div>
             <form [formGroup]="valutCreateForm">
-              <div class="form-group row mb-2">
+
+               <div class="form-group row align-items-center">
+                <label for="permission" class="col-sm-3 col-form-label">WALLET</label>
+                <div class="col-sm-12">
+                  <label>
+                    <input type="radio" value="private" formControlName="permission">
+                      <span>CAKE-USDC</span>
+                  </label>
+                </div>
+                <div class="col-sm-12">
+                  <label>
+                    <input type="radio" value="whitelisted" formControlName="permission" [attr.disabled]="true">
+                      <span>CAKE</span>
+                  </label>
+                </div>
+                <div class="col-sm-12">
+                  <label>
+                    <input type="radio" value="whitelisted2" formControlName="permission" [attr.disabled]="true">
+                      <span>USDC</span>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group row mb-2 mt-2">
                 <label for="vaultName" class="col-sm-3 col-form-label">Amount</label>
                 <div class="col-sm-9">
                   <input type="input" class="form-control" id="vaultName" placeholder="Amount" formControlName="amount">
                 </div>
               </div>
-              <!-- <div class="form-group row align-items-center">
-                <label for="permission" class="col-sm-3 col-form-label">Permission</label>
-                <div class="col-sm-4">
-                  <label>
-                    <input type="radio" value="private" formControlName="permission">
-                      <span>Private</span>
-                  </label>
-                </div>
-                <div class="col-sm-4">
-                  <label>
-                    <input type="radio" value="whitelisted" formControlName="permission" [attr.disabled]="true">
-                      <span>Whitelisted</span>
-                  </label>
-                </div>
-              </div>
+              <!--
               <div class="form-group row">
                 <label for="vaultType" class="col-sm-3 col-form-label">Vault Type</label>
                 <div class="col-sm-9">
@@ -157,10 +193,11 @@
                   <input type="text" readonly class="form-control-plaintext" id="chain" formControlName="chain">
                 </div>
               </div> -->
-              <div class="btn_pos mt-4 mb-2">
-                <div> <button class="btn btn-custom" type="button" (click)="approve()">Approve</button></div>
-                <div> <button class="btn btn-custom" type="button" (click)="checkApproval()">Check</button></div>
-                <div> <button class="btn btn-custom" type="button" (click)="deposit()">Deposit</button></div>
+              <div class=" mt-4 mb-2 d-flex align-items-center justify-content-center" >
+                <div> <button *ngIf="!isApprove" class="btn btn-custom" type="button" (click)="approve()">Approve</button></div>
+                <!-- <div> <button class="btn btn-custom" type="button" (click)="checkApproval()">Check</button></div> -->
+                <div> <button *ngIf="isApprove && isDeposit" class="btn btn-custom" type="button" (click)="deposit()">Deposit</button></div>
+                <div> <button *ngIf="isApprove && !isDeposit" class="btn btn-custom" type="button" (click)="withdraw()">Withdraw</button></div>
 
               </div>
             </form>

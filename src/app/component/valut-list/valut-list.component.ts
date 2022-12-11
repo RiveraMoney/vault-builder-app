@@ -11,6 +11,8 @@ import { Table } from 'primeng/table';
 import { CurrencyAmount, ERC20Token, Pair } from '@pancakeswap/sdk';
 import { FarmsService } from 'src/app/service/farms.service';
 import { GlobalService } from 'src/app/service/global.service';
+import { ValutDetilsService } from 'src/app/service/valut-detils.service';
+import { Router } from '@angular/router';
 declare var $: any;
 enum ChainId {
   ETHEREUM = 1,
@@ -1767,7 +1769,9 @@ export class ValutListComponent implements OnInit {
     private fb: FormBuilder,
     private web3Service: Web3Service,
     private farmsService: FarmsService,
-    private globalService: GlobalService
+    private globalService: GlobalService,
+    private valutDetilsService: ValutDetilsService,
+    private router: Router
   ) {
 
 
@@ -1787,25 +1791,21 @@ export class ValutListComponent implements OnInit {
 
   selectProduct(lp: any) {
     this.selectedPool = lp;
-    this.valutCreateForm.patchValue({
-      vaultType: 'Auto-compounding',
-      lpPair: lp.lpSymbol,
-      protocol: "Pancakeswap",
-      chain: 'Binance Smart Chain',
-    });
-    $('#profile').modal('show');
+    this.valutDetilsService.setLPPool(lp);
+    this.router.navigate(['/valutDetails']);
+    // // this.valutCreateForm.patchValue({
+    // //   vaultType: 'Auto-compounding',
+    // //   lpPair: lp.lpSymbol,
+    // //   protocol: "Pancakeswap",
+    // //   chain: 'Binance Smart Chain',
+    // // });
+    // // $('#profile').modal('show');
   }
 
   closePopup() {
     $('#profile').modal('hide');
   }
   async deploy() {
-
-
-    const rewardToLp0Route = ["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.token.address];
-    const rewardToLp1Route = ["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.quoteToken.address];
-    // address = "0x8ba1f109551bD432803012645Ac136ddd64DBA72"
-    // const signer = new ethers.VoidSigner('0x468a5456a89b421770deb79bd1fdad8e9cfbf082', this.provider);
     const contract = new ethers.Contract(
       this.globalService.deployedContract,
       this.factoryAbi,
@@ -1819,7 +1819,6 @@ export class ValutListComponent implements OnInit {
       tokenName : this.valutCreateForm.get('vaultName')?.value,
       tokenSymbol: this.valutCreateForm.get('vaultName')?.value
     };
-    // contract.connect(this.provider)
     const poolInfoByAdress = await contract['createVault'](params);
     console.log('deploy info', poolInfoByAdress);
   }

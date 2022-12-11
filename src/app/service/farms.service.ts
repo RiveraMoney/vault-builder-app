@@ -34,7 +34,7 @@ export class FarmsService {
   constructor() { }
 
   getCakePrice = async (isTestnet: boolean, web3Provider: any) => {
-    debugger
+
     const cakeBse = new ERC20Token(
       ChainId.BSC,
       '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82',
@@ -57,9 +57,9 @@ export class FarmsService {
       tokenA: cakeBse,
       tokenB: busdBsc,
     }
-    debugger
+
     const pairContract = new ethers.Contract(pairConfig.address, this.pairAbi, web3Provider);
-    debugger
+
     const reserves = await pairContract['getReserves']()
     const { reserve0, reserve1 } = reserves
     const { tokenA, tokenB } = pairConfig

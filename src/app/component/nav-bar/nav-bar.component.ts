@@ -18,11 +18,16 @@ export class NavBarComponent implements OnInit {
 
   constructor(private web3Service:Web3Service,private router: Router) {
     this.items = [
-    //   {
-    //     label:'Home',
-    //     icon:'pi pi-home',
-    //     routerLink: '/'
-    //  },
+      {
+        label:'Dashboard',
+        // icon:'pi pi-home',
+        routerLink: '/'
+     },
+     {
+      label:'Vaults',
+      // icon:'pi pi-home',
+      routerLink: '/valut'
+   }
       // {
       //     label:'Match',
       //     icon:'pi pi-user-edit',
