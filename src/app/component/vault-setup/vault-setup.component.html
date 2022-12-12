@@ -1,0 +1,168 @@
+<div class="container" style="color: white;">
+    <div style="border: 2px solid #8F4DE7;    margin-top: 50px;">
+        <div class="row" style="    padding: 20px;">
+            <div class="col-md-6">
+                <div style="text-decoration: underline;
+                font-size: 18px;
+                font-weight: 600;">ETH (Covered Call)</div>
+                <div style="margin-bottom: 10px;font-size: 14px;">DeFi Options</div>
+                <div>Pools: &nbsp;&nbsp;&nbsp;&nbsp; ETH-USDC</div>
+                <div style="margin-bottom: 15px;">Access: &nbsp;&nbsp; Whitelisted &nbsp;&nbsp; <span style="font-size: 14px;"> Details</span></div>
+                <div><img src="assets/icon/Vector.png"> Add notes</div>
+            </div>
+            <div class="col-md-6">
+                <div style="    border: 2px solid #8F4DE7;">
+                    <table style="width: 100%;margin: 10px 20px;">
+                    <tr>
+                        <th>TVL</th>
+                        <th>APY</th>
+                        <th>Daily</th>
+                        <th>Safyty <br> Score</th>
+                      </tr>
+                      <tr>
+                        <td>$0.15 M</td>
+                        <td>19.67%</td>
+                        <td>0.05%</td>
+                        <td>8.8</td>
+                      </tr>
+                    </table>
+                </div>
+                <div style="border: 2px solid #8F4DE7;margin-top: 20px;">
+                    <div style="    margin: 15px 20px;">
+                    <div style="    margin-bottom: 5px;">
+                        <div>Vault contract: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; link</div>
+                    </div>
+                    <div>
+                        <div>Asset(s) contract: &nbsp;&nbsp; USDC, ETH</div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="pTableCustom" style="    border-radius: 0px;
+        border: 2px solid #8F4DE7;
+        margin-top: 50px;
+    ">
+            <div style="padding-top: 40px;padding-left: 40px;font-weight: 600;">Whitelisted Addresses</div>
+        <p-table #dt1 [value]="customers" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
+	[rowsPerPageOptions]="[10,25,50]" styleClass="p-datatable-customers p-datatable-gridlines"
+	[paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+	[globalFilterFields]="['name','country.name','representative.name','status']">
+	<ng-template pTemplate="caption">
+		<div class="p-d-flex" style="    text-align: end;">
+			<span class="p-input-icon-left p-ml-auto">
+                <input pInputText type="text" placeholder="Paste Address Here" />
+            </span>
+		</div>
+	</ng-template>
+	<ng-template pTemplate="header">
+		<tr>
+			<th>
+				<div class="p-d-flex p-jc-between p-ai-center">
+					Name
+					<p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+				</div>
+			</th>
+			<th>
+				<div class="p-d-flex p-jc-between p-ai-center">
+					Country
+					<p-columnFilter type="text" field="country.name" display="menu"></p-columnFilter>
+				</div>
+			</th>
+			<th>
+				<div class="p-d-flex p-jc-between p-ai-center">
+					Agent
+					<p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false"
+						[showOperator]="false" [showAddButton]="false">
+						<ng-template pTemplate="header">
+							<div class="p-px-3 p-pt-3 p-pb-0">
+								<span class="p-text-bold">Agent Picker</span>
+							</div>
+						</ng-template>
+						<ng-template pTemplate="filter" let-value let-filter="filterCallback">
+
+						</ng-template>
+					</p-columnFilter>
+				</div>
+			</th>
+			<th>
+				<div class="p-d-flex p-jc-between p-ai-center">
+					Date
+					<p-columnFilter type="date" field="date" display="menu"></p-columnFilter>
+				</div>
+			</th>
+			<th>
+				<div class="p-d-flex p-jc-between p-ai-center">
+					Balance
+					<p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
+				</div>
+			</th>
+			<th>
+				<div class="p-d-flex p-jc-between p-ai-center">
+					Status
+					<p-columnFilter field="status" matchMode="equals" display="menu">
+						<ng-template pTemplate="filter" let-value let-filter="filterCallback">
+
+						</ng-template>
+					</p-columnFilter>
+				</div>
+			</th>
+			<th>
+				<div class="p-d-flex p-jc-between p-ai-center">
+					Activity
+					<p-columnFilter field="activity" matchMode="between" display="menu" [showMatchModes]="false"
+						[showOperator]="false" [showAddButton]="false">
+						<ng-template pTemplate="filter" let-filter="filterCallback">
+
+						</ng-template>
+					</p-columnFilter>
+				</div>
+			</th>
+			<th style="width: 8rem">
+				<div class="p-d-flex p-jc-between p-ai-center">
+					Verified
+					<p-columnFilter type="boolean" field="verified" display="menu"></p-columnFilter>
+				</div>
+			</th>
+		</tr>
+	</ng-template>
+	<ng-template pTemplate="body" let-customer>
+		<tr>
+			<td>
+				{{customer.name}}
+			</td>
+			<td>
+				<span class="image-text">{{customer.country.name}}</span>
+			</td>
+			<td>
+				<span class="image-text">{{customer.representative.name}}</span>
+			</td>
+			<td>
+				{{customer.date | date: 'MM/dd/yyyy'}}
+			</td>
+			<td>
+				{{customer.balance | currency:'USD':'symbol'}}
+			</td>
+			<td>
+				<span [class]="'customer-badge status-' + customer.status">{{customer.status}}</span>
+			</td>
+			<td>
+				<!-- <p-progressBar [value]="customer.activity" [showValue]="false"></p-progressBar> -->
+			</td>
+			<td class="p-text-center">
+				<i class="pi" [ngClass]="{'true-icon pi-check-circle': customer.verified, 'false-icon pi-times-circle': !customer.verified}"></i>
+			</td>
+		</tr>
+	</ng-template>
+	<ng-template pTemplate="emptymessage">
+		<tr>
+			<td colspan="7">No customers found.</td>
+		</tr>
+	</ng-template>
+</p-table>
+    </div>
+    </div>
+</div>

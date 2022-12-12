@@ -1792,7 +1792,7 @@ export class ValutListComponent implements OnInit {
   selectProduct(lp: any) {
     this.selectedPool = lp;
     this.valutDetilsService.setLPPool(lp);
-    this.router.navigate(['/valutDetails']);
+    this.router.navigate(['/vaultDetails']);
     // // this.valutCreateForm.patchValue({
     // //   vaultType: 'Auto-compounding',
     // //   lpPair: lp.lpSymbol,
@@ -1800,10 +1800,6 @@ export class ValutListComponent implements OnInit {
     // //   chain: 'Binance Smart Chain',
     // // });
     // // $('#profile').modal('show');
-  }
-
-  closePopup() {
-    $('#profile').modal('hide');
   }
   async deploy() {
     const contract = new ethers.Contract(

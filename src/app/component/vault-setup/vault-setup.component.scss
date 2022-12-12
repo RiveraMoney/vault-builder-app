@@ -1,0 +1,22 @@
+:host::ng-deep .p-datatable .p-datatable-header{
+    background: transparent !important;
+  }
+  :host::ng-deep  input {
+    border-radius: 10px;
+    height: 35px;
+    background: transparent;
+    border: 2px solid white;
+    /* margin-right: 14px; */
+}
+
+:host::ng-deep .p-datatable.p-datatable-gridlines .p-datatable-header{
+    border: none;
+    // border-bottom: 1px solid;
+}
+:host::ng-deep thead{
+    border: none;
+    // border-bottom: 1px solid;
+}
+:host::ng-deep .p-datatable.p-datatable-gridlines .p-datatable-thead > tr > th{
+    border: none;
+}

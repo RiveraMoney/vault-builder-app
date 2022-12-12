@@ -20,6 +20,7 @@ export class VaultDetailsComponent implements OnInit {
   public factoryAbi:any;
   public selectedPool: any;
   public aprValue: any;
+  public isDeployed = false;
   constructor(
     private valutDetilsService: ValutDetilsService,
     private fb: FormBuilder,
@@ -38,7 +39,7 @@ export class VaultDetailsComponent implements OnInit {
 
       this.selectedPool = e;
       if(Object.keys(this.selectedPool).length === 0){
-        this.router.navigate(['/valut']);
+        this.router.navigate(['/vault']);
       }
       var apr = +(this.selectedPool.apr._value);
       this.aprValue = apr.toFixed(2);
@@ -51,6 +52,7 @@ export class VaultDetailsComponent implements OnInit {
       lpPair: [''],
       protocol: [''],
       chain: [],
+      apy: [],
     });
 
 
@@ -85,9 +87,10 @@ export class VaultDetailsComponent implements OnInit {
     };
     try{
       const poolInfoByAdress = await contract['createVault'](params);
-      $('#profile').modal('hide');
-      this.showSuccess("Vault created successfully")
-      this.router.navigate(['/valut']);
+      this.isDeployed = true;
+      // $('#profile').modal('hide');
+      // this.showSuccess("Vault created successfully")
+      // this.router.navigate(['/vault']);
     } catch (err: any) {
       this.showError(err.message)
       console.log('revert reason:', err.message);
@@ -95,11 +98,15 @@ export class VaultDetailsComponent implements OnInit {
   }
 
   selectLp(){
+    var apr = +(this.selectedPool.apr._value);
+      this.aprValue = apr.toFixed(2);
+
      this.valutCreateForm.patchValue({
       vaultType: 'Auto-compounding',
       lpPair: this.selectedPool.lpSymbol,
       protocol: "Pancakeswap",
-      chain: 'Binance Smart Chain',
+      chain: 'Pancakeswap',
+      apy: this.aprValue
     });
     $('#profile').modal('show');
   }
@@ -113,5 +120,10 @@ export class VaultDetailsComponent implements OnInit {
   }
   showError(message: any) {
     this.messageService.add({severity:'error', summary: 'Error', detail: message});
+  }
+
+  goToDashboard(){
+    $('#profile').modal('hide');
+    this.router.navigate(['/']);
   }
 }

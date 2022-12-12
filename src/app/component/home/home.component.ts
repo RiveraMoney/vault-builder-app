@@ -56,6 +56,7 @@ export class HomeComponent implements OnInit {
   isLogin = false;
   isApprove = false;
   isDeposit = true;
+  isDepositOrWithdrawstart = false;
   public web3Provider: any;
   public valutAddress: any;
   public valutAddressList: any[] = [];
@@ -119,7 +120,7 @@ export class HomeComponent implements OnInit {
     });
   }
   createValut() {
-    this.router.navigate(['/valut']);
+    this.router.navigate(['/vault']);
   }
 
   async loadprovider(){
@@ -159,7 +160,8 @@ export class HomeComponent implements OnInit {
     const contract = this.getContract(this.valutAddress,this.valutAbi,this.web3Provider.getSigner());
     try {
       await contract['deposit'](BigNumber.from(+this.valutCreateForm.get('amount')?.value));
-      $('#depositModal').modal('hide');
+      this.isDepositOrWithdrawstart = true;
+      // $('#depositModal').modal('hide');
     } catch (err: any) {
       this.showError(err.message)
     }
@@ -169,7 +171,8 @@ export class HomeComponent implements OnInit {
     const contract = this.getContract(this.valutAddress,this.valutAbi,this.web3Provider.getSigner());
     try {
     await contract['withdraw'](BigNumber.from(+this.valutCreateForm.get('amount')?.value));
-    $('#depositModal').modal('hide');
+    this.isDepositOrWithdrawstart = true;
+    // $('#depositModal').modal('hide');
   } catch (err: any) {
     this.showError(err.message)
   }
@@ -235,5 +238,9 @@ showSuccess() {
 }
 showError(message: any) {
   this.messageService.add({severity:'error', summary: 'Error', detail: message});
+}
+
+refresh(){
+  location.reload();
 }
 }

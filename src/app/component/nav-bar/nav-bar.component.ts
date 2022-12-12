@@ -18,16 +18,16 @@ export class NavBarComponent implements OnInit {
 
   constructor(private web3Service:Web3Service,private router: Router) {
     this.items = [
-      {
-        label:'Dashboard',
-        // icon:'pi pi-home',
-        routerLink: '/'
-     },
-     {
-      label:'Vaults',
-      // icon:'pi pi-home',
-      routerLink: '/valut'
-   }
+  //     {
+  //       label:'Dashboard',
+  //       // icon:'pi pi-home',
+  //       routerLink: '/'
+  //    },
+  //    {
+  //     label:'Vaults',
+  //     // icon:'pi pi-home',
+  //     routerLink: '/vault'
+  //  }
       // {
       //     label:'Match',
       //     icon:'pi pi-user-edit',
@@ -49,7 +49,17 @@ export class NavBarComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.web3Service.web3Modal.cachedProvider){
-
+      this.items = [
+        {
+          label:'Dashboard',
+          // icon:'pi pi-home',
+          routerLink: '/'
+       },
+       {
+        label:'Create Vault',
+        // icon:'pi pi-home',
+        routerLink: '/vault'
+     }];
       this.connectWallet();
     }
   }

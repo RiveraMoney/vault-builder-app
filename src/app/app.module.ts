@@ -18,6 +18,7 @@ import {ButtonModule} from 'primeng/button';
 import {ToastModule} from 'primeng/toast';
 import { VaultDetailsComponent } from './component/vault-details/vault-details.component';
 import { MessageService } from 'primeng/api';
+import { VaultSetupComponent } from './component/vault-setup/vault-setup.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { MessageService } from 'primeng/api';
     HomeComponent,
     NavBarComponent,
     ValutListComponent,
-    VaultDetailsComponent
+    VaultDetailsComponent,
+    VaultSetupComponent
   ],
   imports: [
     CommonModule,

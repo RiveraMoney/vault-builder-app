@@ -14,22 +14,22 @@
                 <div class="col-md-6">
                     <div style="    background: #2d325a;
                     color: white;
-                    padding: 20px;
+                    padding: 20px 20px 30px 30px;
                     border-radius: 15px;">
                         <div class="row" style="display: flex;
                         justify-content: space-between;
                         align-items: center;">
                             <div class="col-md-8">
                                 <div>
-                                    <img src="assets/icon/pancake.png">
-                                    <span>Pancakeswap</span>
+                                    <img src="assets/icon/pancake.png" style="margin-left: -18px;">
+                                    <span>PancakeSwap (V2)</span>
                                     <span style="    background: linear-gradient(90deg, #003F79 0%, #5E309B 100%);
                                     padding: 10px;
                                     margin-left: 12px;
                                     border-radius: 10px;">{{aprValue}}%</span>
                                 </div>
                                 <div>
-                                    Take advantage of high-yield LPs without getting exposure to the assets. Maximise your returns on the blue-chip coins.
+                                  PancakeSwap (V2) is a popular decentralized exchange (DEX) allowing BEP-20 token swaps on the BNB Chain. Stake LP tokens to farm CAKE.
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -42,14 +42,17 @@
                 <div class="col-md-6" style="cursor: no-drop;" [attr.disabled]="true">
                     <div style="    background: #2d325a;
                     color: white;
-                    padding: 20px;
+                    padding: 20px 20px 30px 30px;
                     border-radius: 15px;">
                         <div class="row" style="display: flex;
                         justify-content: space-between;
                         align-items: center;">
                             <div class="col-md-8">
                                 <div>
-                                    <img src="assets/icon/pancake.png">
+                                    <img src="assets/icon/omni.png" style="    width: 50px;
+                                    margin-right: 15px;
+                                    margin-bottom: 18px;
+                                    margin-top: 14px;">
                                     <span>ONI Protocol</span>
                                     <span style="    background: linear-gradient(90deg, #003F79 0%, #5E309B 100%);
                                     padding: 10px;
@@ -57,7 +60,7 @@
                                     border-radius: 10px;">{{aprValue}}%</span>
                                 </div>
                                 <div>
-                                    Take advantage of high-yield LPs without getting exposure to the assets. Maximise your returns on the blue-chip coins.
+                                  ONI is a new perpetual exchange on BSC. Stake your LP tokens to provide concentrated liquidity at ONI protocol and farm ONI token in reward.
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -85,7 +88,8 @@
     <div class="modal-content cust_modal">
       <div class="modal_close" data-dismiss="modal" aria-label="Close">
       </div>
-      <div class="modal-body">
+
+      <div class="modal-body" *ngIf="!isDeployed">
         <div data-dismiss="modal" aria-label="Close" class="modal_close" (click)="closePopup()">
           <i class="fa fa-times fr cursor_pointer" aria-hidden="true"></i>
         </div>
@@ -137,9 +141,18 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label for="chain" class="col-sm-3 col-form-label">Chain</label>
+                <label for="chain" class="col-sm-3 col-form-label">Farming</label>
                 <div class="col-sm-9">
                   <input type="text" readonly class="form-control-plaintext" id="chain" formControlName="chain">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="apy" class="col-sm-3 col-form-label">APY</label>
+                <div class="col-sm-9">
+                  <span>{{aprValue}}%</span> &nbsp;&nbsp;<span style="font-size: 22px;">{{+aprValue + 5}}%</span>
+                  <br>
+                  <span>Powered by Rivera automation</span>
+                  <!-- <input type="text" readonly class="form-control-plaintext" id="apy" formControlName="apy"> -->
                 </div>
               </div>
               <div class="btn_pos mt-4 mb-2">
@@ -154,6 +167,20 @@
        </div>
 
       </div>
+
+      <div class="modal-body text-center" *ngIf="isDeployed">
+        <div class="mb-4 mt-2 text-center">
+          <i class="pi pi-check-circle" style="font-size: 50px;"></i>
+            <!-- <img class="img-fluid logo-sz" src="https://issuerpanel.authlink.com/assets/img/ICONS/right_tick.png" alt=""> -->
+        </div>
+        <ng-container class="mb-2">
+          <h4 class="text-center" style="font-weight: 600;font-size: 20px;">Your vault deployment is in progress</h4>
+          <h6 class="text-center mb-4" style="font-size: 12px;">Strategy Note:
+            This action is deploying an automated vault that adds liquidity to the CAKE-BNB LP pool on Pancakeswap DEX. Received LP tokens will be staked at Pancakeswap to farm CAKE. Farming rewards will be harvested periodically and exchanged for LP tokens to add to the principal amount. </h6>
+      </ng-container>
+        <button type="button" (click)="goToDashboard()" class="btn btn-custom mb-2">Go to Dashboard</button>
+    </div>
+
     </div>
   </div>
 </div>

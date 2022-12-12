@@ -14,6 +14,7 @@
         <tr>
             <th>LP Pair</th>
             <th>DEX</th>
+            <th>LP APR</th>
             <th pSortableColumn="apr">Farming APR<p-sortIcon field="apr"></p-sortIcon></th>
             <th>Liquidity</th>
             <th style="width:4rem"></th>
@@ -23,6 +24,7 @@
         <tr>
             <td>{{lp.lpSymbol}}</td>
             <td>Pancakeswap</td>
+            <td>1.56%</td>
             <td>{{lp.apr}}</td>
             <td>{{lp.liquidity}}</td>
             <td>
@@ -33,92 +35,4 @@
 </p-table>
 </div>
 </div>
-</div>
-
-
-
-
-<div
-  class="modal fade"
-  id="profile"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="profileModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content cust_modal">
-      <div class="modal_close" data-dismiss="modal" aria-label="Close">
-      </div>
-      <div class="modal-body">
-        <div data-dismiss="modal" aria-label="Close" class="modal_close" (click)="closePopup()">
-          <i class="fa fa-times fr cursor_pointer" aria-hidden="true"></i>
-        </div>
-        <ng-container class="mb-2">
-          <div class="mb-4">
-            <span style="font-weight: 600; font-size: 18px"  >Create Vault</span >
-          </div>
-          <div>
-            <form [formGroup]="valutCreateForm">
-              <div class="form-group row mb-2">
-                <label for="vaultName" class="col-sm-3 col-form-label">Vault Name</label>
-                <div class="col-sm-9">
-                  <input type="input" class="form-control" id="vaultName" placeholder="Vault Name" formControlName="vaultName">
-                </div>
-              </div>
-              <div class="form-group row align-items-center">
-                <label for="permission" class="col-sm-3 col-form-label">Permission</label>
-                <div class="col-sm-4">
-                  <!-- <p-radioButton name="groupname" value="val1" formControlName="permission">a</p-radioButton> -->
-                  <label>
-                    <input type="radio" value="private" formControlName="permission">
-                      <span>Private</span>
-                  </label>
-                </div>
-                <div class="col-sm-4">
-                  <!-- <p-radioButton name="groupname" value="val2" formControlName="permission">b</p-radioButton> -->
-                  <label>
-                    <input type="radio" value="whitelisted" formControlName="permission" [attr.disabled]="true">
-                      <span>Whitelisted</span>
-                  </label>
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="vaultType" class="col-sm-3 col-form-label">Vault Type</label>
-                <div class="col-sm-9">
-                  <input type="text" readonly class="form-control-plaintext" id="vaultType" formControlName="vaultType">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="lpPair" class="col-sm-3 col-form-label">LP Pair</label>
-                <div class="col-sm-9">
-                  <input type="text" readonly class="form-control-plaintext" id="lpPair" formControlName="lpPair">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="protocol" class="col-sm-3 col-form-label">Protocol</label>
-                <div class="col-sm-9">
-                  <input type="text" readonly class="form-control-plaintext" id="protocol" formControlName="protocol">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="chain" class="col-sm-3 col-form-label">Chain</label>
-                <div class="col-sm-9">
-                  <input type="text" readonly class="form-control-plaintext" id="chain" formControlName="chain">
-                </div>
-              </div>
-              <div class="btn_pos mt-4 mb-2">
-                <div> <button class="btn btn-custom" type="button" (click)="deploy()">Deploy</button></div>
-                <div> <button class="btn btn-custom" type="button" (click)="closePopup()">Back</button></div>
-
-              </div>
-            </form>
-          </div>
-        </ng-container>
-       <div>
-       </div>
-
-      </div>
-    </div>
-  </div>
 </div>
