@@ -12,108 +12,108 @@ customers: any;
     this.customers = [
       {
         "id":1000,
-        "name":"James Butt",
+        "name":"0xae345......5b1",
         "country":{
-           "name":"Algeria",
+           "name":"10,000.00",
            "code":"dz"
         },
         "company":"Benton, John B Jr",
-        "date":"2015-09-13",
-        "status":"unqualified",
+        "date":"8.12%",
+        "status":"18.54%",
         "verified":true,
         "activity":17,
         "representative":{
-           "name":"Ioni Bowcher",
+           "name":"11,541.32",
            "image":"ionibowcher.png"
         },
         "balance":70663
      },
      {
         "id":1001,
-        "name":"Josephine Darakjy",
+        "name":"0xae345......5b1",
         "country":{
-           "name":"Egypt",
+           "name":"10,000.00",
            "code":"eg"
         },
         "company":"Chanay, Jeffrey A Esq",
-        "date":"2019-02-09",
-        "status":"proposal",
+        "date":"8.12%",
+        "status":"18.54%",
         "verified":true,
         "activity":0,
         "representative":{
-           "name":"Amy Elsner",
+           "name":"11,541.32",
            "image":"amyelsner.png"
         },
         "balance":82429
      },
      {
         "id":1002,
-        "name":"Art Venere",
+        "name":"0xae345......5b1",
         "country":{
-           "name":"Panama",
+           "name":"10,000.00",
            "code":"pa"
         },
         "company":"Chemel, James L Cpa",
-        "date":"2017-05-13",
-        "status":"qualified",
+        "date":"8.12%",
+        "status":"18.54%",
         "verified":false,
         "activity":63,
         "representative":{
-           "name":"Asiya Javayant",
+           "name":"11,541.32",
            "image":"asiyajavayant.png"
         },
         "balance":28334
      },
      {
         "id":1003,
-        "name":"Lenna Paprocki",
+        "name":"0xae345......5b1",
         "country":{
-           "name":"Slovenia",
+           "name":"10,000.00",
            "code":"si"
         },
         "company":"Feltz Printing Service",
-        "date":"2020-09-15",
-        "status":"new",
+        "date":"8.12%",
+        "status":"18.54%",
         "verified":false,
         "activity":37,
         "representative":{
-           "name":"Xuxue Feng",
+           "name":"11,541.32",
            "image":"xuxuefeng.png"
         },
         "balance":88521
      },
      {
         "id":1004,
-        "name":"Donette Foller",
+        "name":"0xae345......5b1",
         "country":{
-           "name":"South Africa",
+           "name":"10,000.00",
            "code":"za"
         },
         "company":"Printing Dimensions",
-        "date":"2016-05-20",
-        "status":"proposal",
+        "date":"8.12%",
+        "status":"18.54%",
         "verified":true,
         "activity":33,
         "representative":{
-           "name":"Asiya Javayant",
+           "name":"11,541.32",
            "image":"asiyajavayant.png"
         },
         "balance":93905
      },
      {
         "id":1005,
-        "name":"Simona Morasca",
+        "name":"0xae345......5b1",
         "country":{
-           "name":"Egypt",
+           "name":"10,000.00",
            "code":"eg"
         },
         "company":"Chapman, Ross E Esq",
-        "date":"2018-02-16",
-        "status":"qualified",
+        "date":"8.12%",
+        "status":"18.54%",
         "verified":false,
         "activity":68,
         "representative":{
-           "name":"Ivan Magalhaes",
+           "name":"11,541.32",
            "image":"ivanmagalhaes.png"
         },
         "balance":50041

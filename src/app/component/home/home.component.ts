@@ -243,4 +243,8 @@ showError(message: any) {
 refresh(){
   location.reload();
 }
+
+goToSetup(){
+  this.router.navigate(['/vaultSetup']);
+}
 }

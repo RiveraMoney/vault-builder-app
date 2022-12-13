@@ -80,7 +80,7 @@
               <div class="col-md-5 box_outer" style="padding: 22px;margin-bottom: 20px;" *ngFor="let valut of valutAddressList">
                 <!-- {{valut.__zone_symbol__value | json}} -->
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
-                  <div><img src="assets/icon/networkIcon.png" style="    width: 30px;
+                  <div (click)="goToSetup()" style="cursor: pointer;"><img src="assets/icon/networkIcon.png" style="    width: 30px;
                     margin-right: 16px;"> CAKE -USDC/ACC</div>
                   <div><img src="assets/icon/ShareNetwork.png" style="width: 25px;"> </div>
                 </div>

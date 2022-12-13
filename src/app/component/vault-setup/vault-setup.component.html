@@ -1,13 +1,13 @@
 <div class="container" style="color: white;">
     <div style="border: 2px solid #8F4DE7;    margin-top: 50px;">
-        <div class="row" style="    padding: 20px;">
+        <div class="row" style="padding: 20px 30px;">
             <div class="col-md-6">
                 <div style="text-decoration: underline;
                 font-size: 18px;
-                font-weight: 600;">ETH (Covered Call)</div>
+                font-weight: 600;">ETH (Covered Call) <span><img src="assets/icon/ShareNetwork.png" style="width: 25px;margin-left: 25px;"></span></div>
                 <div style="margin-bottom: 10px;font-size: 14px;">DeFi Options</div>
                 <div>Pools: &nbsp;&nbsp;&nbsp;&nbsp; ETH-USDC</div>
-                <div style="margin-bottom: 15px;">Access: &nbsp;&nbsp; Whitelisted &nbsp;&nbsp; <span style="font-size: 14px;"> Details</span></div>
+                <div style="margin-bottom: 15px;">Access: &nbsp;&nbsp; Whitelisted &nbsp;&nbsp; <span style="font-size: 14px;text-decoration: underline;"> Details</span></div>
                 <div><img src="assets/icon/Vector.png"> Add notes</div>
             </div>
             <div class="col-md-6">
@@ -15,116 +15,100 @@
                     <table style="width: 100%;margin: 10px 20px;">
                     <tr>
                         <th>TVL</th>
-                        <th>APY</th>
+                        <th>APY <img src="assets/icon/vector_white.png" style="margin-top: -1px;width: 14px;"></th>
                         <th>Daily</th>
-                        <th>Safyty <br> Score</th>
+                        <th>Safyty <br> Score <img src="assets/icon/vector_white.png" style="    margin-top: -20px;
+                            width: 14px;"></th>
                       </tr>
                       <tr>
                         <td>$0.15 M</td>
                         <td>19.67%</td>
                         <td>0.05%</td>
-                        <td>8.8</td>
+                        <td>8.8 <img src="assets/icon/network.png" style="margin-top: -8px;
+                            width: 14px;
+                            margin-left: 5px;"></td>
                       </tr>
                     </table>
                 </div>
                 <div style="border: 2px solid #8F4DE7;margin-top: 20px;">
                     <div style="    margin: 15px 20px;">
                     <div style="    margin-bottom: 5px;">
-                        <div>Vault contract: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; link</div>
+                        <div>Vault contract: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="assets/icon/link.png"></div>
                     </div>
                     <div>
-                        <div>Asset(s) contract: &nbsp;&nbsp; USDC, ETH</div>
+                        <div>Asset(s) contract: &nbsp;&nbsp; <span style="text-decoration: underline;">USDC, ETH</span></div>
                     </div>
                 </div>
                 </div>
             </div>
         </div>
     </div>
-
+    <div style="   margin-top: 50px;">
+        <img src="assets/icon/valutSetup_back.svg" style="width: 100%;">
+    </div>
     <div>
         <div class="pTableCustom" style="    border-radius: 0px;
         border: 2px solid #8F4DE7;
         margin-top: 50px;
     ">
-            <div style="padding-top: 40px;padding-left: 40px;font-weight: 600;">Whitelisted Addresses</div>
+
         <p-table #dt1 [value]="customers" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
 	[rowsPerPageOptions]="[10,25,50]" styleClass="p-datatable-customers p-datatable-gridlines"
 	[paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
 	[globalFilterFields]="['name','country.name','representative.name','status']">
 	<ng-template pTemplate="caption">
-		<div class="p-d-flex" style="    text-align: end;">
-			<span class="p-input-icon-left p-ml-auto">
+    <!-- <div style="padding-top: 40px;padding-left: 40px;font-weight: 600;text-align: start;">Whitelisted Addresses</div> -->
+		<div class="p-d-flex" style="    display: flex;
+    justify-content: space-between;color: white">
+        <div>
+            <span>Whitelisted Addresses</span>
+        </div>
+        <div>
+            <span class="p-input-icon-left p-ml-auto">
                 <input pInputText type="text" placeholder="Paste Address Here" />
+
+                <button class="btn" style="    background: white;
+                margin-left: 20px;
+                margin-top: -5px;">Whitelist New</button>
             </span>
+        </div>
 		</div>
+
 	</ng-template>
 	<ng-template pTemplate="header">
 		<tr>
 			<th>
 				<div class="p-d-flex p-jc-between p-ai-center">
-					Name
+            Address
 					<p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
 				</div>
 			</th>
 			<th>
 				<div class="p-d-flex p-jc-between p-ai-center">
-					Country
+            Deposited(in $)
 					<p-columnFilter type="text" field="country.name" display="menu"></p-columnFilter>
 				</div>
 			</th>
 			<th>
 				<div class="p-d-flex p-jc-between p-ai-center">
-					Agent
-					<p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false"
-						[showOperator]="false" [showAddButton]="false">
-						<ng-template pTemplate="header">
-							<div class="p-px-3 p-pt-3 p-pb-0">
-								<span class="p-text-bold">Agent Picker</span>
-							</div>
-						</ng-template>
-						<ng-template pTemplate="filter" let-value let-filter="filterCallback">
-
-						</ng-template>
-					</p-columnFilter>
+            Current(in $)
 				</div>
 			</th>
 			<th>
 				<div class="p-d-flex p-jc-between p-ai-center">
-					Date
+            Share in vault(%)
 					<p-columnFilter type="date" field="date" display="menu"></p-columnFilter>
 				</div>
 			</th>
-			<th>
+			<!-- <th>
 				<div class="p-d-flex p-jc-between p-ai-center">
 					Balance
 					<p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
 				</div>
-			</th>
+			</th> -->
 			<th>
 				<div class="p-d-flex p-jc-between p-ai-center">
-					Status
-					<p-columnFilter field="status" matchMode="equals" display="menu">
-						<ng-template pTemplate="filter" let-value let-filter="filterCallback">
-
-						</ng-template>
-					</p-columnFilter>
-				</div>
-			</th>
-			<th>
-				<div class="p-d-flex p-jc-between p-ai-center">
-					Activity
-					<p-columnFilter field="activity" matchMode="between" display="menu" [showMatchModes]="false"
-						[showOperator]="false" [showAddButton]="false">
-						<ng-template pTemplate="filter" let-filter="filterCallback">
-
-						</ng-template>
-					</p-columnFilter>
-				</div>
-			</th>
-			<th style="width: 8rem">
-				<div class="p-d-flex p-jc-between p-ai-center">
-					Verified
-					<p-columnFilter type="boolean" field="verified" display="menu"></p-columnFilter>
+            IRR (%)
 				</div>
 			</th>
 		</tr>
@@ -141,19 +125,13 @@
 				<span class="image-text">{{customer.representative.name}}</span>
 			</td>
 			<td>
-				{{customer.date | date: 'MM/dd/yyyy'}}
+				{{customer.date}}
 			</td>
+			<!-- <td>
+				{{customer.balance}}
+			</td> -->
 			<td>
-				{{customer.balance | currency:'USD':'symbol'}}
-			</td>
-			<td>
-				<span [class]="'customer-badge status-' + customer.status">{{customer.status}}</span>
-			</td>
-			<td>
-				<!-- <p-progressBar [value]="customer.activity" [showValue]="false"></p-progressBar> -->
-			</td>
-			<td class="p-text-center">
-				<i class="pi" [ngClass]="{'true-icon pi-check-circle': customer.verified, 'false-icon pi-times-circle': !customer.verified}"></i>
+				{{customer.status}}
 			</td>
 		</tr>
 	</ng-template>
@@ -163,6 +141,26 @@
 		</tr>
 	</ng-template>
 </p-table>
+    </div>
+    </div>
+
+    <div style="border: 2px solid #8F4DE7;    margin-top: 50px; margin-bottom: 50px;">
+        <div style="padding: 20px 0px 40px;">
+        <div style="text-align: center;margin-bottom: 24px;">Action</div>
+        <div style="display: flex;justify-content: space-around;">
+            <div>
+                <button class="btn btn_cstm"><img src="assets/icon/action1.png" style="margin-right: 10px;width: 18px;"> Rename Vault</button>
+            </div>
+            <div>
+                <button class="btn btn_cstm"><img src="assets/icon/action2.png" style="margin-right: 10px;width: 18px;"> Duplicate Vault</button>
+            </div>
+            <div>
+                <button class="btn btn_cstm"><img src="assets/icon/action3.png" style="margin-right: 10px;width: 18px;"> Lock Deposit</button>
+            </div>
+            <div>
+                <button class="btn btn_cstm"><img src="assets/icon/action4.png" style="margin-right: 10px;width: 18px;"> Retire Vault</button>
+            </div>
+        </div>
     </div>
     </div>
 </div>
