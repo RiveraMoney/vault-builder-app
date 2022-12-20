@@ -10,7 +10,7 @@ const routes: Routes = [{
   path:'', component: HomeComponent,},
   {path: 'vault', component: ValutListComponent, canActivate: [AuthGuard]},
   {path: 'vaultDetails', component: VaultDetailsComponent, canActivate: [AuthGuard]},
-  {path: 'vaultSetup', component: VaultSetupComponent, canActivate: [AuthGuard]}
+  {path: 'vaultSetup/:type', component: VaultSetupComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({

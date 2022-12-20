@@ -1,5 +1,5 @@
 <div class="container" style="color: white;">
-    <div style="border: 2px solid #8F4DE7;    margin-top: 50px;">
+    <div style="border: 2px solid #8F4DE7;    margin-top: 50px;" *ngIf="!isPrivateValut">
         <div class="row" style="padding: 20px 30px;">
             <div class="col-md-6">
                 <div style="text-decoration: underline;
@@ -9,6 +9,17 @@
                 <div>Pools: &nbsp;&nbsp;&nbsp;&nbsp; ETH-USDC</div>
                 <div style="margin-bottom: 15px;">Access: &nbsp;&nbsp; Whitelisted &nbsp;&nbsp; <span style="font-size: 14px;text-decoration: underline;"> Details</span></div>
                 <div><img src="assets/icon/Vector.png"> Add notes</div>
+                <div  style="    display: flex;
+                justify-content: space-between;
+                margin-top: 15px;
+                width: 35%;">
+                  <div>
+                   <button class="btn btn_cstm">Deposit</button>
+                  </div>
+                  <div>
+                   <button class="btn btn_cstm">Withdraw</button>
+                  </div>
+                 </div>
             </div>
             <div class="col-md-6">
                 <div style="    border: 2px solid #8F4DE7;">
@@ -21,10 +32,10 @@
                             width: 14px;"></th>
                       </tr>
                       <tr>
-                        <td>$0.15 M</td>
+                        <td>$151,237</td>
                         <td>19.67%</td>
                         <td>0.05%</td>
-                        <td>8.8 <img src="assets/icon/network.png" style="margin-top: -8px;
+                        <td>8.2 <img src="assets/icon/network.png" style="margin-top: -8px;
                             width: 14px;
                             margin-left: 5px;"></td>
                       </tr>
@@ -36,17 +47,67 @@
                         <div>Vault contract: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="assets/icon/link.png"></div>
                     </div>
                     <div>
-                        <div>Asset(s) contract: &nbsp;&nbsp; <span style="text-decoration: underline;">USDC, ETH</span></div>
+                        <div>Asset(s) contract: &nbsp;&nbsp; <span style="text-decoration: underline;">CAKE, BUSD</span></div>
                     </div>
                 </div>
                 </div>
             </div>
         </div>
     </div>
+    <div style="border: 2px solid #8F4DE7;    margin-top: 50px;" *ngIf="isPrivateValut">
+      <div class="row" style="padding: 20px 30px;">
+          <div class="col-md-6">
+              <div style="text-decoration: underline;
+              font-size: 18px;
+              font-weight: 600;">BFF DEMO <span><img src="assets/icon/ShareNetwork.png" style="width: 25px;margin-left: 25px;"></span></div>
+              <div style="margin-bottom: 10px;font-size: 14px;">Auto-compounding vault</div>
+              <div>Pools: &nbsp;&nbsp;&nbsp;&nbsp; CAKE-BUSD on PancakeSwap</div>
+              <div>Access: &nbsp;&nbsp; Private</div>
+              <div style="margin-bottom: 15px;">
+                <div class="d-flex">
+                  <div style="    margin-right: 8px;">Strategy:</div>
+                  <div>The vault adds liquidity to the CAKE-BNB LP pool on Pancakeswap DEX. Received LP tokens are staked at Pancakeswap to farm CAKE. Farming rewards are harvested periodically and exchanged for LP tokens to add to the principal amount.</div>
+                </div>
+                </div>
+
+          </div>
+          <div class="col-md-6">
+              <div style="    border: 2px solid #8F4DE7;">
+                  <table style="width: 100%;margin: 10px 20px;">
+                  <tr>
+                      <th>TVL</th>
+                      <th>APY <img src="assets/icon/vector_white.png" style="margin-top: -1px;width: 14px;"></th>
+                      <th>Daily</th>
+                      <th>Safyty  Score <img src="assets/icon/vector_white.png" style="
+                          width: 14px;"></th>
+                    </tr>
+                    <tr>
+                      <td>$151,237</td>
+                      <td>19.67%</td>
+                      <td>0.05%</td>
+                      <td>8.2 <img src="assets/icon/network.png" style="margin-top: -8px;
+                          width: 14px;
+                          margin-left: 5px;"></td>
+                    </tr>
+                  </table>
+              </div>
+              <div style="border: 2px solid #8F4DE7;margin-top: 20px;">
+                  <div style="    margin: 15px 20px;">
+                  <div style="    margin-bottom: 5px;">
+                      <div>Vault contract: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="assets/icon/link.png"></div>
+                  </div>
+                  <div>
+                      <div>Asset(s) contract: &nbsp;&nbsp; <span style="text-decoration: underline;">CAKE, BUSD</span></div>
+                  </div>
+              </div>
+              </div>
+          </div>
+      </div>
+  </div>
     <div style="   margin-top: 50px;">
         <img src="assets/icon/valutSetup_back.svg" style="width: 100%;">
     </div>
-    <div>
+    <div *ngIf="!isPrivateValut">
         <div class="pTableCustom" style="    border-radius: 0px;
         border: 2px solid #8F4DE7;
         margin-top: 50px;
@@ -143,6 +204,102 @@
 </p-table>
     </div>
     </div>
+
+    <div *ngIf="isPrivateValut">
+      <div class="pTableCustom" style="    border-radius: 0px;
+      border: 2px solid #8F4DE7;
+      margin-top: 50px;
+  ">
+
+      <p-table #dt1 [value]="transaction" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
+[rowsPerPageOptions]="[10,25,50]" styleClass="p-datatable-customers p-datatable-gridlines"
+[paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+>
+<ng-template pTemplate="caption">
+  <!-- <div style="padding-top: 40px;padding-left: 40px;font-weight: 600;text-align: start;">Whitelisted Addresses</div> -->
+  <div class="p-d-flex" style="    display: flex;
+  justify-content: space-between;color: white">
+      <div>
+          <span>Transaction Logs</span>
+      </div>
+      <div>
+          <!-- <span class="p-input-icon-left p-ml-auto">
+              <input pInputText type="text" placeholder="Paste Address Here" />
+
+              <button class="btn" style="    background: white;
+              margin-left: 20px;
+              margin-top: -5px;">Whitelist New</button>
+          </span> -->
+      </div>
+  </div>
+
+</ng-template>
+<ng-template pTemplate="header">
+  <tr>
+    <th>
+      <div class="p-d-flex p-jc-between p-ai-center">
+        Timestamp
+        <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+      </div>
+    </th>
+    <th>
+      <div class="p-d-flex p-jc-between p-ai-center">
+        Transaction Type
+        <p-columnFilter type="text" field="country.name" display="menu"></p-columnFilter>
+      </div>
+    </th>
+    <th>
+      <div class="p-d-flex p-jc-between p-ai-center">
+        Protocol
+      </div>
+    </th>
+    <th>
+      <div class="p-d-flex p-jc-between p-ai-center">
+        Value
+        <p-columnFilter type="date" field="date" display="menu"></p-columnFilter>
+      </div>
+    </th>
+    <th>
+      <div class="p-d-flex p-jc-between p-ai-center">
+        Txn Fee
+      </div>
+    </th>
+    <th></th>
+  </tr>
+</ng-template>
+<ng-template pTemplate="body" let-customer>
+  <tr>
+    <td>
+      {{customer.time}}
+    </td>
+    <td>
+      <span class="image-text">{{customer.transactionType}}</span>
+    </td>
+    <td>
+      <span class="image-text">{{customer.protocol}}</span>
+    </td>
+    <td>
+      {{customer.value}}
+    </td>
+    <!-- <td>
+      {{customer.balance}}
+    </td> -->
+    <td>
+      {{customer.txnFee}}
+    </td>
+    <td *ngIf="customer.id != 1004">
+      <a target="_blank" href="https://bscscan.com/tx/0x77ceac6025cfb07c234316b1f5ee58066975b72a55ae3f45c7deaa270de80696">View on Explorer</a>
+    </td>
+  </tr>
+</ng-template>
+<ng-template pTemplate="emptymessage">
+  <tr>
+    <td colspan="7">No customers found.</td>
+  </tr>
+</ng-template>
+</p-table>
+  </div>
+  </div>
 
     <div style="border: 2px solid #8F4DE7;    margin-top: 50px; margin-bottom: 50px;">
         <div style="padding: 20px 0px 40px;">

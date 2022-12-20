@@ -9,9 +9,10 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <div class="row" style="align-items: center;
-            justify-content: space-between;">
-                <div class="col-md-6">
+            <div class="row" style="display: flex;
+            flex-direction: column;
+            align-items: center;">
+                <div class="col-md-6" style="margin-bottom: 20px;">
                     <div style="    background: #2d325a;
                     color: white;
                     padding: 20px 20px 30px 30px;
@@ -57,7 +58,7 @@
                                     <span style="    background: linear-gradient(90deg, #003F79 0%, #5E309B 100%);
                                     padding: 10px;
                                     margin-left: 12px;
-                                    border-radius: 10px;">{{aprValue}}%</span>
+                                    border-radius: 10px;">{{aprValue - 2}}%</span>
                                 </div>
                                 <div>
                                   ONI is a new perpetual exchange on BSC. Stake your LP tokens to provide concentrated liquidity at ONI protocol and farm ONI token in reward.
@@ -149,7 +150,7 @@
               <div class="form-group row">
                 <label for="apy" class="col-sm-3 col-form-label">APY</label>
                 <div class="col-sm-9">
-                  <span>{{aprValue}}%</span> &nbsp;&nbsp;<span style="font-size: 22px;">{{+aprValue + 5}}%</span>
+                  <span style="text-decoration: line-through;">{{aprValue}}%</span> &nbsp;&nbsp;<span style="font-size: 22px;">{{+aprValue + 5}}%</span>
                   <br>
                   <span>Powered by Rivera automation</span>
                   <!-- <input type="text" readonly class="form-control-plaintext" id="apy" formControlName="apy"> -->

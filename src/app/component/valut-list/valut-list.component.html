@@ -25,8 +25,8 @@
             <td>{{lp.lpSymbol}}</td>
             <td>Pancakeswap</td>
             <td>1.56%</td>
-            <td>{{lp.apr}}</td>
-            <td>{{lp.liquidity}}</td>
+            <td>{{lp.apr._value | number: '1.2-2'}}%</td>
+            <td>${{lp.liquidity._value | number: '1.2-2'}}</td>
             <td>
               <button type="button" class="btn btn_cstm" (click)="selectProduct(lp)">Select <i class="fa fa-fighter-jet fnt_16 clr_white" aria-hidden="true" style="margin-left: 8px;"></i></button>
           </td>

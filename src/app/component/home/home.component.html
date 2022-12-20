@@ -22,8 +22,8 @@
       <div class="row mt-4">
         <div class="col-md-4 box_outer">
           <div class="first_section_box1 first_section_box1_back_img" style="    font-size: 20px;">
-            <div>Asset Holdings</div>
-            <div>$ 150,750.22</div>
+            <div>Vault Holdings</div>
+            <div style="font-size: 26px;font-weight:600">$ 150,750.22</div>
           </div>
           <div class="second_section_box1 mt-4" style="padding: 5px 10px;">
             <div>
@@ -32,6 +32,10 @@
               <span  class="third_text_color">+36.71%</span>
             </div>
             <div>
+              <div style="width: 150px;
+              margin-right: -35px;margin-bottom: 8px;">
+                <img src="assets/icon/demo3.png" style="    width: 150px;">
+              </div>
              <img src="assets/icon/dollar_round.png" style="width: 35px;margin-right: 5px;">
              <img src="assets/icon/btc_round.png" style="width: 35px;margin-right: 5px;">
              <img src="assets/icon/eth_round.png" style="width: 35px;">
@@ -80,36 +84,43 @@
               <div class="col-md-5 box_outer" style="padding: 22px;margin-bottom: 20px;" *ngFor="let valut of valutAddressList">
                 <!-- {{valut.__zone_symbol__value | json}} -->
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
-                  <div (click)="goToSetup()" style="cursor: pointer;"><img src="assets/icon/networkIcon.png" style="    width: 30px;
-                    margin-right: 16px;"> CAKE -USDC/ACC</div>
-                  <div><img src="assets/icon/ShareNetwork.png" style="width: 25px;"> </div>
+                  <div (click)="goToSetup(valut?.type)" style="cursor: pointer;"><img src="assets/icon/networkIcon.png" style="    width: 30px;
+                    margin-right: 16px;">{{valut?.lpPairName}}</div>
+                  <div *ngIf="valut?.lpPairName != 'Delta neutral vault'"><img src="assets/icon/ShareNetwork.png" style="width: 25px;"> </div>
+                  <div *ngIf="valut?.lpPairName == 'Delta neutral vault'"><img src="assets/icon/demoOnly.png" style="    width: 150px;
+                    margin-right: -52px;"></div>
                 </div>
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
                   <div>Auto-compounding vault</div>
-                  <div> Whitelisted</div>
+                  <div>{{valut?.type}}</div>
                 </div>
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
-                  <div>Balance <br>{{valut?.__zone_symbol__value?.balance}}</div>
-                  <div> Current APY <br> 20.8%</div>
+                  <div>Balance <br>{{valut?.balance}}</div>
+                  <div *ngIf="valut?.lpPairName != 'Delta neutral vault'"> Current APY <br> 19.67%</div>
+                  <div *ngIf="valut?.lpPairName == 'Delta neutral vault'"> Current APY <br> 0%</div>
                 </div>
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-4">
-                  <div>Assets <br><img src="assets/icon/assets.png" style="    width: 40px;
-                    margin-right: 16px;"></div>
-                  <div> Protocols <br><img src="assets/icon/assets.png" style="    width: 40px;
-                    margin-right: 16px;"></div>
+                  <div>Assets <br><img src="assets/icon/cake.png" style=" width: 25px;
+                    margin-right: -10px;"><img src="assets/icon/busd.png" style="width: 25px;margin-right: 16px;"></div>
+                  <div> Protocols <br><img src="assets/icon/cake.png" style="width: 25px;margin-right: 16px;"></div>
                 </div>
 
                 <div  style="display: flex;justify-content: space-around;">
                  <div>
-                  <button class="btn btn_cstm" (click)="showBasicDialog(valut?.__zone_symbol__value?.address, 'deposit')">Deposit</button>
+                  <button class="btn btn_cstm" (click)="showBasicDialog(valut?.address, valut?.lpPairAddress, 'deposit')">Deposit</button>
                  </div>
                  <div>
-                  <button class="btn btn_cstm" (click)="showBasicDialog(valut?.__zone_symbol__value?.address, 'withdraw')">Withdraw</button>
+                  <button class="btn btn_cstm" (click)="showBasicDialog(valut?.address, valut?.lpPairAddress, 'withdraw')">Withdraw</button>
                  </div>
                 </div>
               </div>
-              <div class="col-md-5 box_outer" style="padding: 22px;">
-                <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
+              <div class="col-md-5 box_outer" style="padding: 22px;position: relative;">
+                <div style="position: absolute;
+                top: 22px;
+                right: -29px;">
+                  <img src="assets/icon/demo3.png" style="    width: 150px;">
+                </div>
+                <div  style="display: flex; justify-content: space-between;align-items: center; " class="mb-3">
                   <div style="font-weight: 600;margin-bottom: 10px;    font-size: 18px;">Risk Notifications</div>
                   <!-- <div><img src="assets/icon/ShareNetwork.png" style="width: 25px;"> </div> -->
                 </div>
@@ -128,8 +139,13 @@
                   <div>Transit Swap hacked for $16M, do not use in strategies</div>
                 </div>
               </div>
-              <div class="col-md-5 box_outer" style="padding: 22px;">
-                <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
+              <div class="col-md-5 box_outer" style="padding: 22px;position: relative;">
+                <div style="position: absolute;
+                top: 22px;
+                right: -29px;">
+                  <img src="assets/icon/demo3.png" style="    width: 150px;">
+                </div>
+                <div  style="display: flex; justify-content: space-between;align-items: center; " class="mb-3">
                   <div style="font-weight: 600;margin-bottom: 10px;    font-size: 18px;">Strategy of the day</div>
                   <!-- <div><img src="assets/icon/ShareNetwork.png" style="width: 25px;"> </div> -->
                 </div>
@@ -173,8 +189,8 @@
         </div>
         <ng-container class="mb-2">
           <div class="mb-4">
-            <span style="font-weight: 600" *ngIf="isDeposit">Deposit your LP or ZAP in ETH or USDC</span >
-              <span style="font-weight: 600" *ngIf="!isDeposit">Withdraw your LP or ZAP in ETH or USDC</span >
+            <span style="font-weight: 600" *ngIf="isDeposit">Deposit your LP or ZAP in CAKE or BUSD</span >
+              <span style="font-weight: 600" *ngIf="!isDeposit">Withdraw your LP or ZAP in CAKE or BUSD</span >
           </div>
           <div>
             <form [formGroup]="valutCreateForm">
@@ -184,26 +200,34 @@
                 <div class="col-sm-12">
                   <label>
                     <input type="radio" value="private" formControlName="permission">
-                      <span>CAKE-USDC LP2</span>
+                      <span><img src="assets/icon/cake.png" style="width: 20px;
+                        margin-left: 5px;
+                        margin-right: 2px;"><img src="assets/icon/busd.png" style="width: 18px;
+                        margin-left: -8px;
+                        margin-right: 2px;">CAKE-BUSD LP</span>
                   </label>
                 </div>
                 <div class="col-sm-12">
                   <label>
                     <input type="radio" value="whitelisted" formControlName="permission" [attr.disabled]="true">
-                      <span>CAKE</span>
+                      <span><img src="assets/icon/cake.png" style="width: 20px;
+                        margin-left: 5px;
+                        margin-right: 2px;">CAKE</span>
                   </label>
                 </div>
                 <div class="col-sm-12">
                   <label>
                     <input type="radio" value="whitelisted2" formControlName="permission" [attr.disabled]="true">
-                      <span>USDC</span>
+                      <span><img src="assets/icon/busd.png" style="width: 18px;
+                        margin-left: 5px;
+                        margin-right: 2px;">BUSD</span>
                   </label>
                 </div>
                 <!-- <div class="col-sm-12">
                   <button class="btn btn_cstm">Buy Token</button>
                 </div> -->
               </div>
-              <div class="form-group row mb-2 mt-2">
+              <div class="form-group row mb-2 mt-2" *ngIf="isApprove">
                 <label for="vaultName" class="col-sm-3 col-form-label">Amount</label>
                 <div class="col-sm-9">
                   <input type="input" class="form-control" id="vaultName" placeholder="Amount" formControlName="amount">

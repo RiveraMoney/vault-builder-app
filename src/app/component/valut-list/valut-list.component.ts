@@ -13,6 +13,9 @@ import { FarmsService } from 'src/app/service/farms.service';
 import { GlobalService } from 'src/app/service/global.service';
 import { ValutDetilsService } from 'src/app/service/valut-detils.service';
 import { Router } from '@angular/router';
+import { ApiService } from 'src/app/service/api.service';
+import { CommonService } from 'src/app/service/common.service';
+import farms from 'src/assets/constants/farms/56';
 declare var $: any;
 enum ChainId {
   ETHEREUM = 1,
@@ -1771,7 +1774,10 @@ export class ValutListComponent implements OnInit {
     private farmsService: FarmsService,
     private globalService: GlobalService,
     private valutDetilsService: ValutDetilsService,
-    private router: Router
+    private router: Router,
+    private apiService: ApiService,
+    private commonService: CommonService
+
   ) {
 
 
@@ -1793,13 +1799,6 @@ export class ValutListComponent implements OnInit {
     this.selectedPool = lp;
     this.valutDetilsService.setLPPool(lp);
     this.router.navigate(['/vaultDetails']);
-    // // this.valutCreateForm.patchValue({
-    // //   vaultType: 'Auto-compounding',
-    // //   lpPair: lp.lpSymbol,
-    // //   protocol: "Pancakeswap",
-    // //   chain: 'Binance Smart Chain',
-    // // });
-    // // $('#profile').modal('show');
   }
   async deploy() {
     const contract = new ethers.Contract(
@@ -1816,7 +1815,6 @@ export class ValutListComponent implements OnInit {
       tokenSymbol: this.valutCreateForm.get('vaultName')?.value
     };
     const poolInfoByAdress = await contract['createVault'](params);
-    console.log('deploy info', poolInfoByAdress);
   }
 
 
@@ -1837,13 +1835,29 @@ export class ValutListComponent implements OnInit {
     this.cakePriceBusd = FixedNumber.from(cakeBusdPrice.toSignificant(3))._value;
     console.log("cakePrice", FixedNumber.from(cakeBusdPrice.toSignificant(3)));
 
-    //get farm list
-    (await this.web3Service.getLpJSON('56.json')).subscribe(async (e) => {
-      this.lpList2 = e.slice(0,5);
+
+    //get the farms list from local
+
+    this.lpList2 = farms.slice(0,5);
+    // this.lpList2 = this.lpList2.map((e: any) =>{
+    //   return {...e, lpSymbol: e.lpSymbol, apr: e.apr?.toFixed(2), liquidity: e.liquidity}
+    // })
       // this.fetchMasterChefV2Data();
       this.setupPooldata();
-      // // this.getDeployedValut();
-    });
+
+    // // const factoryAbiUrl = this.apiService.pancakeFarmList + '56.ts';
+    // // //get factory abi value from artifacts folder
+    // // (await this.commonService.getAbiJSON(factoryAbiUrl)).subscribe(async (e) => {
+    // //   console.log("lololo", e);
+    // // });
+
+    // //get farm list
+    // (await this.web3Service.getLpJSON('56.json')).subscribe(async (e) => {
+    //   this.lpList2 = e.slice(0,5);
+    //   // this.fetchMasterChefV2Data();
+    //   this.setupPooldata();
+    //   // // this.getDeployedValut();
+    // });
   }
 
   public async fetchMasterChefV2Data() {

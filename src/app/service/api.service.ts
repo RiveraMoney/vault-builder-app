@@ -10,4 +10,5 @@ export class ApiService {
   riveraAutoCompoundingVaultV1Abi = 'assets/artifacts/src/vaults/RiveraAutoCompoundingVaultV1.sol/RiveraAutoCompoundingVaultV1.json'
   pancakeVaultFactoryV1Abi = 'assets/artifacts/src/PancakeVaultFactoryV1.sol/PancakeVaultFactoryV1.json'
   pancakeLpsAbi = 'assets/abiLists/pancakeLpsAbi.json'
+  pancakeFarmList = 'assets/constants/farms'
 }

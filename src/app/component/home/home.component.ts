@@ -8,6 +8,7 @@ import { ApiService } from 'src/app/service/api.service';
 import { CommonService } from 'src/app/service/common.service';
 import { GlobalService } from 'src/app/service/global.service';
 import { Web3Service } from 'src/app/service/web3.service';
+import farms from 'src/assets/constants/farms/56';
 declare var window: any;
 declare var $: any;
 @Component({
@@ -59,6 +60,7 @@ export class HomeComponent implements OnInit {
   isDepositOrWithdrawstart = false;
   public web3Provider: any;
   public valutAddress: any;
+  public lpAddress: any;
   public valutAddressList: any[] = [];
   public displayBasic: boolean= false;
   public valutCreateForm!: FormGroup;
@@ -80,7 +82,6 @@ export class HomeComponent implements OnInit {
       permission: ['private'],
     });
     if (this.web3Service.web3Modal.cachedProvider) {
-
       this.isLogin = true;
       await this.getAbiValue();
       await this.loadprovider();
@@ -141,14 +142,29 @@ export class HomeComponent implements OnInit {
 
     this.valutAddressList = this.valutAddressList.map(async e =>{
       const contract = this.getContract(e,this.valutAbi,this.web3Provider.getSigner());
+      const stack = await contract['stake']();
+      console.log("stack new", stack);
       const balance = await contract['balance']();
       return {
         "address": e,
-        "balance": balance
+        "balance": balance,
+        "lpPairAddress": stack,
+        "lpPairName": farms.find(e => e.lpAddress == stack)?.lpSymbol,
+        "type": "Private"
       };
     });
 
-    debugger
+    this.valutAddressList = await Promise.all(this.valutAddressList);
+
+    this.valutAddressList.push({
+      "address" : "0x1aba4273eDA950c1fd842d872AE1Ab21C5012664",
+      "balance": 0,
+      "lpPairAddress": "0x804678fa97d91B974ec2af3c843270886528a9E6",
+      "lpPairName": "Delta neutral vault",
+      "type": "Whitelisted"
+    })
+
+
     if(this.valutAddressList.length > 0){
       this.isValutCreated = true;
     }
@@ -178,7 +194,7 @@ export class HomeComponent implements OnInit {
   }
   }
 
-  async showBasicDialog(address: any, type: any) {
+  async showBasicDialog(address: any, lpAdress:any, type: any) {
     this.isDeposit = type == 'deposit' ? true : false;
     // if(type == 'deposit'){
     //   this.isDeposit = true;
@@ -187,11 +203,12 @@ export class HomeComponent implements OnInit {
     // }
     this.valutAddress = address;
     this.displayBasic = true;
+    this.lpAddress = lpAdress;
     // const contract = this.getContract(this.valutAddress,this.valutAbi,this.web3Provider.getSigner());
     // const balance = await contract['balance']();
     // console.log("balance", balance);
 
-    const accountContract = this.getContract('0x804678fa97d91B974ec2af3c843270886528a9E6',this.lpAbi, this.web3Provider.getSigner());
+    const accountContract = this.getContract(this.lpAddress,this.lpAbi, this.web3Provider.getSigner());
   const allowance = await accountContract['allowance'](sessionStorage.getItem("account"),this.valutAddress);
   if(+ethers.utils.formatEther(allowance) > 0){
     this.isApprove = true;
@@ -203,7 +220,7 @@ export class HomeComponent implements OnInit {
 }
 
 async approve(){
-  const contract = this.getContract('0x804678fa97d91B974ec2af3c843270886528a9E6', this.lpAbi, this.web3Provider.getSigner());
+  const contract = this.getContract(this.lpAddress, this.lpAbi, this.web3Provider.getSigner());
   try{
   const amount = 1000000000000000;
   const withdraw = await contract['approve'](this.valutAddress, BigNumber.from(amount));
@@ -219,7 +236,7 @@ async approve(){
 
 async checkApproval(){
   console.log("allowance first", ethers.utils.formatEther(+this.valutCreateForm.get('amount')?.value));
-  const contract = this.getContract('0x804678fa97d91B974ec2af3c843270886528a9E6',this.lpAbi, this.web3Provider.getSigner());
+  const contract = this.getContract(this.valutAddress,this.lpAbi, this.web3Provider.getSigner());
   const allowance = await contract['allowance'](sessionStorage.getItem("account"),this.valutAddress);
   console.log('allowance', ethers.utils.formatEther(allowance));
   console.log('allowance2', BigNumber.from(allowance));
@@ -244,7 +261,8 @@ refresh(){
   location.reload();
 }
 
-goToSetup(){
-  this.router.navigate(['/vaultSetup']);
+goToSetup(type: any){
+  let isPrivatevalut = (type == "Private" ? true : false);
+  this.router.navigate(['/vaultSetup', isPrivatevalut]);
 }
 }
