@@ -54,6 +54,13 @@ export class Web3Service {
       const accounts = await this.library.listAccounts();
       const network = await this.library.getNetwork();
       const chainId = network.chainId;
+      const binanceTestChainId = '0x38'
+      if(chainId != 56){
+        await this.provider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: binanceTestChainId}],
+        });
+      }
       //sessionStorage.setItem("library", JSON.stringify(this.library));
       sessionStorage.setItem("account", accounts[0]);
       sessionStorage.setItem("network", network);
