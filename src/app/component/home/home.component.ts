@@ -156,6 +156,7 @@ export class HomeComponent implements OnInit {
 
     this.valutAddressList = await Promise.all(this.valutAddressList);
 
+    if(this.valutAddressList.length > 0){
     this.valutAddressList.push({
       "address" : "0x1aba4273eDA950c1fd842d872AE1Ab21C5012664",
       "balance": 0,
@@ -163,6 +164,7 @@ export class HomeComponent implements OnInit {
       "lpPairName": "Delta neutral vault",
       "type": "Whitelisted"
     })
+  }
 
 
     if(this.valutAddressList.length > 0){

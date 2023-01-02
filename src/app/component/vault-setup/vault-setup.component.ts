@@ -18,7 +18,7 @@ export class VaultSetupComponent implements OnInit {
         time: 'Dec-21-2022 11:19:13 AM +UTC',
         transactionType: 'Deposit',
         protocol: 'Pancakeswap',
-        value: '100 CAKE-BNB LP',
+        value: '100 CAKE-BUSD LP',
         txnFee: '0.02 BNB',
       },
       {
@@ -26,7 +26,7 @@ export class VaultSetupComponent implements OnInit {
         time: 'Dec-21-2022 11:19:13 AM +UTC',
         transactionType: 'Stake LP',
         protocol: 'Pancakeswap',
-        value: '100 CAKE-BNB LP',
+        value: '100 CAKE-BUSD LP',
         txnFee: '0.02 BNB',
       },
       {
