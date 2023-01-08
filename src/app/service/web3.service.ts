@@ -10,7 +10,7 @@ declare var window: any;
 export class Web3Service {
 
   public web3Modal: any;
-  library:any;
+  library: any;
   account: any;
   network: any;
   chainId: any;
@@ -18,20 +18,20 @@ export class Web3Service {
 
   constructor(private http: HttpClient) {
     const providerOptions: any = {
-      walletconnect: {
-        package: window.WalletConnectProvider.default,
-        options: {
-          // Mikko's test key - don't copy as your mileage may vary
-          infuraId: '8043bb2cf99347b1bfadfb233c5325c0',
-        },
-      },
-      fortmatic: {
-        package: window.Fortmatic,
-        options: {
-          // Mikko's TESTNET api key
-          key: 'pk_test_391E26A3B43A3350',
-        },
-      },
+      // walletconnect: {
+      //   package: window.WalletConnectProvider.default,
+      //   options: {
+      //     // Mikko's test key - don't copy as your mileage may vary
+      //     infuraId: '8043bb2cf99347b1bfadfb233c5325c0',
+      //   },
+      // },
+      // fortmatic: {
+      //   package: window.Fortmatic,
+      //   options: {
+      //     // Mikko's TESTNET api key
+      //     key: 'pk_live_F89672B0C7E9CC81',
+      //   },
+      // },
     };
 
     this.web3Modal = new Web3Modal({
@@ -41,7 +41,7 @@ export class Web3Service {
     });
   }
 
-  public async connectWallet(){
+  public async connectWallet() {
     console.log("Opening a dialog", this.web3Modal);
     try {
       //const instance = await this.web3Modal.connect();
@@ -55,10 +55,10 @@ export class Web3Service {
       const network = await this.library.getNetwork();
       const chainId = network.chainId;
       const binanceTestChainId = '0x38'
-      if(chainId != 56){
+      if (chainId != 56) {
         await this.provider.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: binanceTestChainId}],
+          params: [{ chainId: binanceTestChainId }],
         });
       }
       //sessionStorage.setItem("library", JSON.stringify(this.library));
@@ -69,37 +69,37 @@ export class Web3Service {
       // this.network = await this.library.getNetwork();
       // this.chainId = this.network.chainId;
       return this.library;
-    } catch(e) {
+    } catch (e) {
       console.log("Could not get a wallet connection", e);
       return;
     }
   }
 
-  public async disConnect(){
+  public async disConnect() {
     await this.web3Modal.clearCachedProvider();
-   sessionStorage.clear();
+    sessionStorage.clear();
     window.location.reload();
   }
 
-  public async getAccount(library: any){
+  public async getAccount(library: any) {
     const accounts = await library.listAccounts();
-    return  accounts[0];
+    return accounts[0];
   }
 
   public async getAbiJSON(fileName: any): Promise<Observable<any>> {
 
     const url = `./assets/json/${fileName}`;
     return this.http.get(url);
-}
+  }
 
-public async getLpJSON(fileName: any): Promise<Observable<any>> {
-  const url = `https://farms-config.pages.dev/${fileName}`;
-  return this.http.get(url);
-}
+  public async getLpJSON(fileName: any): Promise<Observable<any>> {
+    const url = `https://farms-config.pages.dev/${fileName}`;
+    return this.http.get(url);
+  }
 
 
-// public getJSON(): Observable<any> {
-//   return this.http.get("./assets/mydata.json");
-// }
+  // public getJSON(): Observable<any> {
+  //   return this.http.get("./assets/mydata.json");
+  // }
 
 }
