@@ -164,7 +164,6 @@ export class VaultSetupComponent implements OnInit {
         balance: 50041,
       },
     ];
-    debugger
     const type = this._Activatedroute.snapshot.paramMap.get("type");
     this.isPrivateValut = type == "true" ? true : false;
   }

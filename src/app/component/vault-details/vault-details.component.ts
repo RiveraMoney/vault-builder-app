@@ -21,6 +21,7 @@ export class VaultDetailsComponent implements OnInit {
   public selectedPool: any;
   public aprValue: any;
   public isDeployed = false;
+  public btn_loader = false;
   constructor(
     private valutDetilsService: ValutDetilsService,
     private fb: FormBuilder,
@@ -72,6 +73,7 @@ export class VaultDetailsComponent implements OnInit {
   }
 
   async deploy() {
+    this.btn_loader = true;
     const contract = new ethers.Contract(
       this.globalService.deployedContract,
       this.factoryAbi,
@@ -80,20 +82,37 @@ export class VaultDetailsComponent implements OnInit {
     const params = {
       poolId: BigNumber.from(this.selectedPool.pid),
       approvalDelay: BigNumber.from(21600),
-      rewardToLp0Route: ["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.token.address],
-      rewardToLp1Route:["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.quoteToken.address],
+      rewardToLp0Route: this.getVaultCreateRoute(this.selectedPool.token.address),
+      rewardToLp1Route: this.getVaultCreateRoute(this.selectedPool.quoteToken.address),
       tokenName : this.valutCreateForm.get('vaultName')?.value,
       tokenSymbol: this.valutCreateForm.get('vaultName')?.value
     };
     try{
-      const poolInfoByAdress = await contract['createVault'](params);
-      this.isDeployed = true;
+      const crVltTxtx = await contract['createVault'](params);
+
+      await crVltTxtx.wait().then(() =>{
+        this.btn_loader = false;
+        this.isDeployed = true;
+      });
       // $('#profile').modal('hide');
       // this.showSuccess("Vault created successfully")
       // this.router.navigate(['/vault']);
     } catch (err: any) {
+      this.btn_loader = false;
       this.showError(err.message)
       console.log('revert reason:', err.message);
+    }
+  }
+
+  getVaultCreateRoute(lpToken: any){
+    if(lpToken == this.globalService.rewardTokenAddress){
+      return [this.globalService.rewardTokenAddress];
+    } else if(lpToken == this.globalService.mlcTokenAdress){
+      return [this.globalService.rewardTokenAddress, this.globalService.mlcTokenAdress];
+    } else if(this.globalService.rewardTokenAddress == this.globalService.mlcTokenAdress){
+     return [this.globalService.rewardTokenAddress, lpToken];
+    } else{
+      return [this.globalService.rewardTokenAddress, this.globalService.mlcTokenAdress, lpToken];
     }
   }
 

@@ -58,6 +58,7 @@ export class HomeComponent implements OnInit {
   isApprove = false;
   isDeposit = true;
   isDepositOrWithdrawstart = false;
+  btn_loader = false;
   public web3Provider: any;
   public valutAddress: any;
   public lpAddress: any;
@@ -139,22 +140,27 @@ export class HomeComponent implements OnInit {
     const contract = this.getContract(this.globalService.deployedContract,this.factoryAbi,this.web3Provider.getSigner());
 
     this.valutAddressList = await contract['listAllVaults']();
-
     this.valutAddressList = this.valutAddressList.map(async e =>{
       const contract = this.getContract(e,this.valutAbi,this.web3Provider.getSigner());
       const stack = await contract['stake']();
-      console.log("stack new", stack);
+      const name = await contract['name']();
+      const owner = await contract['owner']();
+      console.log("owner", owner);
       const balance = await contract['balance']();
       return {
         "address": e,
-        "balance": balance,
+        "balance": balance/Math.pow(10, 18),
         "lpPairAddress": stack,
         "lpPairName": farms.find(e => e.lpAddress == stack)?.lpSymbol,
-        "type": "Private"
+        "type": "Private",
+        "name": name,
+        "owner": owner
       };
     });
 
     this.valutAddressList = await Promise.all(this.valutAddressList);
+
+    this.valutAddressList = this.valutAddressList.filter(b => b.owner == sessionStorage.getItem("account"));
 
     if(this.valutAddressList.length > 0){
     this.valutAddressList.push({
@@ -162,7 +168,8 @@ export class HomeComponent implements OnInit {
       "balance": 0,
       "lpPairAddress": "0x804678fa97d91B974ec2af3c843270886528a9E6",
       "lpPairName": "Delta neutral vault",
-      "type": "Whitelisted"
+      "type": "Whitelisted",
+      "name": "Delta neutral vault",
     })
   }
 
@@ -175,23 +182,38 @@ export class HomeComponent implements OnInit {
   }
 
   async deposit(){
+    this.btn_loader = true;
     const contract = this.getContract(this.valutAddress,this.valutAbi,this.web3Provider.getSigner());
     try {
-      await contract['deposit'](BigNumber.from(+this.valutCreateForm.get('amount')?.value));
-      this.isDepositOrWithdrawstart = true;
+      let amountValue = this.valutCreateForm.get('amount')?.value;
+      amountValue = amountValue * Math.pow(10, 18);
+      let dpTxt = await contract['deposit'](amountValue.toString());
+      await dpTxt.wait().then(() =>{
+        this.btn_loader = false;
+        this.isDepositOrWithdrawstart = true;
+      });
+
       // $('#depositModal').modal('hide');
     } catch (err: any) {
+      this.btn_loader = false;
       this.showError(err.message)
     }
   }
 
   async withdraw(){
+    this.btn_loader = true;
     const contract = this.getContract(this.valutAddress,this.valutAbi,this.web3Provider.getSigner());
     try {
-    await contract['withdraw'](BigNumber.from(+this.valutCreateForm.get('amount')?.value));
-    this.isDepositOrWithdrawstart = true;
+      let amountValue = this.valutCreateForm.get('amount')?.value;
+      amountValue = amountValue * Math.pow(10, 18);
+      let wthTxt = await contract['withdraw'](BigNumber.from(amountValue.toString()));
+      await wthTxt.wait().then(() =>{
+        this.btn_loader = false;
+        this.isDepositOrWithdrawstart = true;
+      });
     // $('#depositModal').modal('hide');
   } catch (err: any) {
+    this.btn_loader = false;
     this.showError(err.message)
   }
   }
@@ -224,10 +246,15 @@ export class HomeComponent implements OnInit {
 async approve(){
   const contract = this.getContract(this.lpAddress, this.lpAbi, this.web3Provider.getSigner());
   try{
-  const amount = 1000000000000000;
-  const withdraw = await contract['approve'](this.valutAddress, BigNumber.from(amount));
-  this.isApprove = true;
+  const amount = 999 * Math.pow(10, 18);
+  const aprvTxt = await contract['approve'](this.valutAddress, BigNumber.from(amount.toString()));
+  await aprvTxt.wait().then(() =>{
+    this.btn_loader = false;
+    this.isApprove = true;
+  });
+
 } catch (err: any) {
+  this.btn_loader = false;
   this.showError(err.message)
       console.log('revert reason:', err.message);
 }
@@ -265,6 +292,9 @@ refresh(){
 
 goToSetup(type: any){
   let isPrivatevalut = (type == "Private" ? true : false);
-  this.router.navigate(['/vaultSetup', isPrivatevalut]);
+  if(type != "Private"){
+    this.router.navigate(['/vaultSetup', isPrivatevalut]);
+  }
+
 }
 }

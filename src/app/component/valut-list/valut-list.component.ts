@@ -1809,12 +1809,25 @@ export class ValutListComponent implements OnInit {
     const params = {
       poolId: BigNumber.from(this.selectedPool.pid),
       approvalDelay: BigNumber.from(21600),
-      rewardToLp0Route: ["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.token.address],
-      rewardToLp1Route:["0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82","0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", this.selectedPool.quoteToken.address],
+      rewardToLp0Route: this.getVaultCreateRoute(this.selectedPool.token.address),
+      rewardToLp1Route: this.getVaultCreateRoute(this.selectedPool.quoteToken.address),
       tokenName : this.valutCreateForm.get('vaultName')?.value,
       tokenSymbol: this.valutCreateForm.get('vaultName')?.value
     };
     const poolInfoByAdress = await contract['createVault'](params);
+  }
+
+
+  getVaultCreateRoute(lpToken: any){
+    if(lpToken == this.globalService.rewardTokenAddress){
+      return [this.globalService.rewardTokenAddress];
+    } else if(lpToken == this.globalService.mlcTokenAdress){
+      return [this.globalService.rewardTokenAddress, this.globalService.mlcTokenAdress];
+    } else if(this.globalService.rewardTokenAddress == this.globalService.mlcTokenAdress){
+     return [this.globalService.rewardTokenAddress, lpToken];
+    } else{
+      return [this.globalService.rewardTokenAddress, this.globalService.mlcTokenAdress, lpToken];
+    }
   }
 
 
@@ -1838,7 +1851,7 @@ export class ValutListComponent implements OnInit {
 
     //get the farms list from local
 
-    this.lpList2 = farms.slice(0,5);
+    this.lpList2 = farms.slice(0,21);
     // this.lpList2 = this.lpList2.map((e: any) =>{
     //   return {...e, lpSymbol: e.lpSymbol, apr: e.apr?.toFixed(2), liquidity: e.liquidity}
     // })
