@@ -85,8 +85,8 @@
                 <!-- {{valut.__zone_symbol__value | json}} -->
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
                   <div (click)="goToSetup(valut?.type)" style="cursor: pointer;"><img src="assets/icon/networkIcon.png" style="    width: 30px;
-                    margin-right: 16px;">{{valut?.lpPairName}}</div>
-                  <div *ngIf="valut?.lpPairName != 'Delta neutral vault'"><img src="assets/icon/ShareNetwork.png" style="width: 25px;"> </div>
+                    margin-right: 16px;">{{valut?.name}}</div>
+                  <!-- <div *ngIf="valut?.lpPairName != 'Delta neutral vault'"><img src="assets/icon/ShareNetwork.png" style="width: 25px;"> </div> -->
                   <div *ngIf="valut?.lpPairName == 'Delta neutral vault'"><img src="assets/icon/demoOnly.png" style="    width: 150px;
                     margin-right: -52px;"></div>
                 </div>
@@ -95,22 +95,22 @@
                   <div>{{valut?.type}}</div>
                 </div>
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
-                  <div>Balance <br>{{valut?.balance}}</div>
+                  <div>Balance <br>${{valut?.balance}}</div>
                   <div *ngIf="valut?.lpPairName != 'Delta neutral vault'"> Current APY <br> 19.67%</div>
                   <div *ngIf="valut?.lpPairName == 'Delta neutral vault'"> Current APY <br> 0%</div>
                 </div>
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-4">
                   <div>Assets <br><img src="assets/icon/cake.png" style=" width: 25px;
                     margin-right: -10px;"><img src="assets/icon/busd.png" style="width: 25px;margin-right: 16px;"></div>
-                  <div> Protocols <br><img src="assets/icon/cake.png" style="width: 25px;margin-right: 16px;"></div>
+                  <div> Protocol <br><img src="assets/icon/cake.png" style="width: 25px;margin-right: 16px;"></div>
                 </div>
 
                 <div  style="display: flex;justify-content: space-around;">
                  <div>
-                  <button class="btn btn_cstm" (click)="showBasicDialog(valut?.address, valut?.lpPairAddress, 'deposit')">Deposit</button>
+                  <button class="btn btn_cstm" [disabled]="valut?.type == 'Whitelisted'" (click)="showBasicDialog(valut?.address, valut?.lpPairAddress, 'deposit')">Deposit</button>
                  </div>
                  <div>
-                  <button class="btn btn_cstm" (click)="showBasicDialog(valut?.address, valut?.lpPairAddress, 'withdraw')">Withdraw</button>
+                  <button class="btn btn_cstm" [disabled]="valut?.type == 'Whitelisted'" (click)="showBasicDialog(valut?.address, valut?.lpPairAddress, 'withdraw')">Withdraw</button>
                  </div>
                 </div>
               </div>
@@ -261,8 +261,10 @@
               <div class=" mt-4 mb-2 d-flex align-items-center justify-content-center" >
                 <div> <button *ngIf="!isApprove" class="btn btn-custom" type="button" (click)="approve()">Approve</button></div>
                 <!-- <div> <button class="btn btn-custom" type="button" (click)="checkApproval()">Check</button></div> -->
-                <div> <button *ngIf="isApprove && isDeposit" class="btn btn-custom" type="button" (click)="deposit()">Deposit</button></div>
-                <div> <button *ngIf="isApprove && !isDeposit" class="btn btn-custom" type="button" (click)="withdraw()">Withdraw</button></div>
+                <div> <button *ngIf="isApprove && isDeposit" class="btn btn-custom" type="button" (click)="deposit()">  <img *ngIf="btn_loader" src="assets/icon/btn_loader.gif" style="width: 18px;
+                  margin-right: 5px;">Deposit</button></div>
+                <div> <button *ngIf="isApprove && !isDeposit" class="btn btn-custom" type="button" (click)="withdraw()"><img *ngIf="btn_loader" src="assets/icon/btn_loader.gif" style="width: 18px;
+                  margin-right: 5px;">Withdraw</button></div>
 
               </div>
             </form>
