@@ -79,14 +79,16 @@ export class VaultDetailsComponent implements OnInit {
       this.factoryAbi,
       this.web3Provider.getSigner()
     );
+    let lpTokenList = this.arrangeTokens(this.selectedPool.token.address, this.selectedPool.quoteToken.address);
     const params = {
       poolId: BigNumber.from(this.selectedPool.pid),
       approvalDelay: BigNumber.from(21600),
-      rewardToLp0Route: this.getVaultCreateRoute(this.selectedPool.token.address),
-      rewardToLp1Route: this.getVaultCreateRoute(this.selectedPool.quoteToken.address),
+      rewardToLp0Route: this.getVaultCreateRoute(lpTokenList[0]),
+      rewardToLp1Route: this.getVaultCreateRoute(lpTokenList[1]),
       tokenName : this.valutCreateForm.get('vaultName')?.value,
       tokenSymbol: this.valutCreateForm.get('vaultName')?.value
     };
+    console.log("vault param", params);
     try{
       const crVltTxtx = await contract['createVault'](params);
 
@@ -102,6 +104,10 @@ export class VaultDetailsComponent implements OnInit {
       this.showError(err.message)
       console.log('revert reason:', err.message);
     }
+  }
+
+  arrangeTokens(tokenA: string, tokenB: string): [string, string]{
+    return tokenA.toLowerCase() < tokenB.toLowerCase() ? [tokenA, tokenB] : [tokenB, tokenA];
   }
 
   getVaultCreateRoute(lpToken: any){
