@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BigNumber, ethers } from 'ethers';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { MessageService } from 'primeng/api';
 import { ApiService } from 'src/app/service/api.service';
 import { CommonService } from 'src/app/service/common.service';
@@ -62,9 +63,13 @@ export class HomeComponent implements OnInit {
   public web3Provider: any;
   public valutAddress: any;
   public lpAddress: any;
+  public lpPairName: any;
+  public lpPairToken1Name: any;
+  public lpPairToken2Name: any;
   public valutAddressList: any[] = [];
   public displayBasic: boolean= false;
   public valutCreateForm!: FormGroup;
+  public display: boolean = false;
 
   constructor(
     private web3Service: Web3Service,
@@ -74,7 +79,8 @@ export class HomeComponent implements OnInit {
     private fb: FormBuilder,
     public commonService: CommonService,
     public apiService: ApiService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private ngxService: NgxUiLoaderService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -83,14 +89,27 @@ export class HomeComponent implements OnInit {
       permission: ['private'],
     });
     if (this.web3Service.web3Modal.cachedProvider) {
+      this.ngxService.start();
       this.isLogin = true;
       await this.getAbiValue();
       await this.loadprovider();
       await this.getDeployedValut();
+      this.ngxService.stop();
+      this.checkRiskAcceptedOrNot();
     }
-
-
   }
+
+  checkRiskAcceptedOrNot() {
+    if(sessionStorage.getItem("isRiskAccepted") && sessionStorage.getItem("isRiskAccepted") == "true"){
+      this.display = false;
+    } else{
+      this.display = true;
+    }
+  }
+closeWarningDialog(){
+  sessionStorage.setItem("isRiskAccepted", "true");
+  this.display = false;
+}
 
   async getAbiValue(){
     //get factory abi url from api service
@@ -140,7 +159,7 @@ export class HomeComponent implements OnInit {
     const contract = this.getContract(this.globalService.deployedContract,this.factoryAbi,this.web3Provider.getSigner());
 
     this.valutAddressList = await contract['listAllVaults']();
-    this.valutAddressList = this.valutAddressList.map(async e =>{
+    this.valutAddressList = this.valutAddressList?.map(async e =>{
       const contract = this.getContract(e,this.valutAbi,this.web3Provider.getSigner());
       const stack = await contract['stake']();
       const name = await contract['name']();
@@ -187,7 +206,8 @@ export class HomeComponent implements OnInit {
     try {
       let amountValue = this.valutCreateForm.get('amount')?.value;
       amountValue = amountValue * Math.pow(10, 18);
-      let dpTxt = await contract['deposit'](amountValue.toString());
+      amountValue = amountValue.toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 18 });
+      let dpTxt = await contract['deposit'](amountValue.replace(/,/g,''));
       await dpTxt.wait().then(() =>{
         this.btn_loader = false;
         this.isDepositOrWithdrawstart = true;
@@ -218,16 +238,22 @@ export class HomeComponent implements OnInit {
   }
   }
 
-  async showBasicDialog(address: any, lpAdress:any, type: any) {
+  async showBasicDialog(valut: any, type: any) {
+    console.log("valut", valut);
     this.isDeposit = type == 'deposit' ? true : false;
     // if(type == 'deposit'){
     //   this.isDeposit = true;
     // } else{
     //   this.isDeposit = false;
     // }
-    this.valutAddress = address;
+    this.valutAddress = valut?.address;
     this.displayBasic = true;
-    this.lpAddress = lpAdress;
+    this.lpAddress = valut?.lpPairAddress;
+    this.lpPairName = valut?.lpPairName;
+    const pairName = this.lpPairName.split(" ");
+    const firstName = pairName[0].split("-");
+    this.lpPairToken1Name = firstName[0];
+    this.lpPairToken2Name = firstName[1];
     // const contract = this.getContract(this.valutAddress,this.valutAbi,this.web3Provider.getSigner());
     // const balance = await contract['balance']();
     // console.log("balance", balance);
@@ -246,8 +272,10 @@ export class HomeComponent implements OnInit {
 async approve(){
   const contract = this.getContract(this.lpAddress, this.lpAbi, this.web3Provider.getSigner());
   try{
-  const amount = 999 * Math.pow(10, 18);
-  const aprvTxt = await contract['approve'](this.valutAddress, BigNumber.from(amount.toString()));
+  const amount = 99999999999999999 * Math.pow(10, 18);
+  let convertedAmount = amount.toLocaleString(undefined,{ minimumFractionDigits: 0, maximumFractionDigits: 18 });
+  convertedAmount = convertedAmount.replace(/,/g,'')
+  const aprvTxt = await contract['approve'](this.valutAddress, BigNumber.from(convertedAmount));
   await aprvTxt.wait().then(() =>{
     this.btn_loader = false;
     this.isApprove = true;

@@ -107,10 +107,10 @@
 
                 <div  style="display: flex;justify-content: space-around;">
                  <div>
-                  <button class="btn btn_cstm" [disabled]="valut?.type == 'Whitelisted'" (click)="showBasicDialog(valut?.address, valut?.lpPairAddress, 'deposit')">Deposit</button>
+                  <button class="btn btn_cstm" [disabled]="valut?.type == 'Whitelisted'" (click)="showBasicDialog(valut, 'deposit')">Deposit</button>
                  </div>
                  <div>
-                  <button class="btn btn_cstm" [disabled]="valut?.type == 'Whitelisted'" (click)="showBasicDialog(valut?.address, valut?.lpPairAddress, 'withdraw')">Withdraw</button>
+                  <button class="btn btn_cstm" [disabled]="valut?.type == 'Whitelisted'" (click)="showBasicDialog(valut, 'withdraw')">Withdraw</button>
                  </div>
                 </div>
               </div>
@@ -189,38 +189,38 @@
         </div>
         <ng-container class="mb-2">
           <div class="mb-4">
-            <span style="font-weight: 600" *ngIf="isDeposit">Deposit your LP or ZAP in CAKE or BUSD</span >
-              <span style="font-weight: 600" *ngIf="!isDeposit">Withdraw your LP or ZAP in CAKE or BUSD</span >
+            <span style="font-weight: 600" *ngIf="isDeposit">Deposit your LP or ZAP in {{lpPairToken1Name}} or {{lpPairToken2Name}}</span >
+              <span style="font-weight: 600" *ngIf="!isDeposit">Withdraw your LP or ZAP in {{lpPairToken1Name}} or {{lpPairToken2Name}}</span >
           </div>
           <div>
             <form [formGroup]="valutCreateForm">
 
                <div class="form-group row align-items-center">
-                <label for="permission" class="col-sm-3 col-form-label">WALLET</label>
-                <div class="col-sm-12">
+                <label for="permission" class="col-sm-3 col-form-label" style="margin-top: -18px;
+                margin-bottom: 8px;">WALLET</label>
+                <div class="col-sm-12 radioButton_height">
                   <label>
                     <input type="radio" value="private" formControlName="permission">
-                      <span><img src="assets/icon/cake.png" style="width: 20px;
-                        margin-left: 5px;
-                        margin-right: 2px;"><img src="assets/icon/busd.png" style="width: 18px;
-                        margin-left: -8px;
-                        margin-right: 2px;">CAKE-BUSD LP</span>
+                      <span style="margin-left: 5px;"><img src="assets/icon/cake.png" style="width: 20px;margin-left: 5px;margin-right: 2px;">
+                        <img src="assets/icon/busd.png" style="width: 18px;margin-left: -8px;margin-right: 2px;">
+                        <span> {{lpPairName}}</span>
+                      </span>
                   </label>
                 </div>
-                <div class="col-sm-12">
+                <div class="col-sm-12 radioButton_height">
                   <label>
                     <input type="radio" value="whitelisted" formControlName="permission" [attr.disabled]="true">
-                      <span><img src="assets/icon/cake.png" style="width: 20px;
+                      <span style="margin-left: 5px;"><img src="assets/icon/cake.png" style="width: 20px;
                         margin-left: 5px;
-                        margin-right: 2px;">CAKE</span>
+                        margin-right: 2px;">{{lpPairToken1Name}}</span>
                   </label>
                 </div>
-                <div class="col-sm-12">
+                <div class="col-sm-12 radioButton_height">
                   <label>
                     <input type="radio" value="whitelisted2" formControlName="permission" [attr.disabled]="true">
-                      <span><img src="assets/icon/busd.png" style="width: 18px;
+                      <span style="margin-left: 5px;"><img src="assets/icon/busd.png" style="width: 18px;
                         margin-left: 5px;
-                        margin-right: 2px;">BUSD</span>
+                        margin-right: 2px;">{{lpPairToken2Name}}</span>
                   </label>
                 </div>
                 <!-- <div class="col-sm-12">
@@ -290,3 +290,17 @@
   </div>
 </div>
 <p-toast></p-toast>
+<ngx-ui-loader></ngx-ui-loader>
+<p-dialog [closable]="false" [modal]="true"
+[(visible)]="display" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
+  <ng-template pTemplate="header">
+    MVP TESTING RISK NOTICE
+  </ng-template>
+  Rivera contracts are NOT audited yet. You may lose ALL funds deposited into Rivera-powered strategy vaults.
+  All funds deposited are subjected to smart contract risks, strategy execution failure risks, liquidation risks, liquidity risks, investment risks and more.
+  By continuing, you are acknowledging that you understand the risks involved.
+
+  <ng-template pTemplate="footer" >
+    <button class="btn btn-custom" (click)="closeWarningDialog()"> OK </button>
+  </ng-template>
+</p-dialog>

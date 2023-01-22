@@ -19,6 +19,7 @@ import {ToastModule} from 'primeng/toast';
 import { VaultDetailsComponent } from './component/vault-details/vault-details.component';
 import { MessageService } from 'primeng/api';
 import { VaultSetupComponent } from './component/vault-setup/vault-setup.component';
+import { NgxUiLoaderModule } from 'ngx-ui-loader';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { VaultSetupComponent } from './component/vault-setup/vault-setup.compone
     RadioButtonModule,
     DialogModule,
     ButtonModule,
-    ToastModule
+    ToastModule,
+    NgxUiLoaderModule
   ],
   providers: [MessageService],
   bootstrap: [AppComponent]

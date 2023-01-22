@@ -53,3 +53,21 @@
   background-size: cover;
   height: 120px;
 }
+
+.radioButton_height{
+  height: 30px;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-content,
+:host ::ng-deep .p-dialog .p-dialog-header,
+:host ::ng-deep .p-dialog .p-dialog-footer{
+  background-color: #1e223f;
+    color: white;
+    text-align: center;
+}
+// :host ::ng-deep .p-dialog .p-dialog-footer{
+//  text-align: center;
+// }
+:host ::ng-deep .p-dialog-header{
+  justify-content: center;
+}
