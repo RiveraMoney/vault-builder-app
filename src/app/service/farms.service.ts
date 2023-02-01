@@ -53,7 +53,7 @@ export class FarmsService {
     )
 
     const pairConfig = {
-      address: Pair.getAddress(cakeBse, busdBsc),
+      address: Pair.getAddress(cakeBse, busdBsc), //fetch cake busd lp pair adress using pancakeswap skd
       tokenA: cakeBse,
       tokenB: busdBsc,
     }

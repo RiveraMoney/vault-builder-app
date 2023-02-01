@@ -1,5 +1,16 @@
 <div class="container">
-  <div *ngIf="!isLogin" style="margin-top: 15%; text-align: center">
+  <div *ngIf="!isLogin" style="margin-top: 5%; text-align: center; display: flex;align-items:center;flex-direction: column;">
+    <div style=" width: 35vw !important;
+    background-color: #FF4500;padding: 20px;margin-bottom: 30px;    color: white;">
+
+        <div style="font-size: 24px;
+        font-weight: 600;">
+          <img src="assets/icon/warning.svg" class="wrn_icon_wdth"> MVP TESTING RISK NOTICE <img class="wrn_icon_wdth" src="assets/icon/warning.svg">
+  </div>
+        Rivera contracts are NOT audited yet.<br> You may lose ALL funds deposited into Rivera-powered strategy vaults.
+        All funds deposited are subjected to smart contract risks, strategy execution failure risks, liquidation risks, liquidity risks, investment risks and more.<br>
+        By continuing, you are acknowledging that you understand the risks involved.
+    </div>
     <div class="cnt_btn_txt">Please connect your wallet to get started.</div>
     <button class="mb-3" class="btn btn-custom" (click)="connectWallet()">
       Connect
@@ -293,14 +304,17 @@
 <ngx-ui-loader></ngx-ui-loader>
 <p-dialog [closable]="false" [modal]="true"
 [(visible)]="display" [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
-  <ng-template pTemplate="header">
-    MVP TESTING RISK NOTICE
+  <ng-template pTemplate="header" >
+  <span style="font-size: 24px;
+  font-weight: 600;">
+    <img src="assets/icon/warning.svg" class="wrn_icon_wdth"> MVP TESTING RISK NOTICE <img class="wrn_icon_wdth" src="assets/icon/warning.svg">
+  </span>
   </ng-template>
-  Rivera contracts are NOT audited yet. You may lose ALL funds deposited into Rivera-powered strategy vaults.
-  All funds deposited are subjected to smart contract risks, strategy execution failure risks, liquidation risks, liquidity risks, investment risks and more.
+  Rivera contracts are NOT audited yet.<br> You may lose ALL funds deposited into Rivera-powered strategy vaults.
+  All funds deposited are subjected to smart contract risks, strategy execution failure risks, liquidation risks, liquidity risks, investment risks and more.<br>
   By continuing, you are acknowledging that you understand the risks involved.
 
   <ng-template pTemplate="footer" >
-    <button class="btn btn-custom" (click)="closeWarningDialog()"> OK </button>
+    <button class="btn btn-custom" (click)="closeWarningDialog()">Okay, I understand</button>
   </ng-template>
 </p-dialog>

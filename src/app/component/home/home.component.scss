@@ -61,7 +61,10 @@
 :host ::ng-deep .p-dialog .p-dialog-content,
 :host ::ng-deep .p-dialog .p-dialog-header,
 :host ::ng-deep .p-dialog .p-dialog-footer{
-  background-color: #1e223f;
+  // background-color: #1e223f;
+  // background-color: #f76124;
+  background-color: #FF4500;
+  // background-color: red;
     color: white;
     text-align: center;
 }
@@ -70,4 +73,13 @@
 // }
 :host ::ng-deep .p-dialog-header{
   justify-content: center;
+}
+.wrn_icon_wdth{
+  width: 30px;
+  margin: 0px 10px;
+  margin-bottom: 5px;
+}
+
+:host ::ng-deep .p-dialog{
+  width: 35vw !important;
 }

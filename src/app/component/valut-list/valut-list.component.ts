@@ -1918,7 +1918,7 @@ export class ValutListComponent implements OnInit {
 
   public async setupPooldata() {
     //fetchMasterChefV2Data
-    await this.fetchMasterChefV2Data();
+    await this.fetchMasterChefV2Data(); // fetch  poolLength,totalRegularAllocPoint,totalSpecialAllocPoint,cakePerBlock data from masterchef contract
 
     //fetch masterchef data
     await this.fetchMasterChefData();
