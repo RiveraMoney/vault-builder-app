@@ -16,6 +16,9 @@ import { Router } from '@angular/router';
 import { ApiService } from 'src/app/service/api.service';
 import { CommonService } from 'src/app/service/common.service';
 import farms from 'src/assets/constants/farms/56';
+import { AprMap } from 'dist/web3-modal/assets/constants/farms/src/types';
+import { getUnixTime, sub } from 'date-fns';
+import { LpAprService } from 'src/app/service/lp-apr.service';
 declare var $: any;
 enum ChainId {
   ETHEREUM = 1,
@@ -24,12 +27,35 @@ enum ChainId {
   BSC = 56,
   BSC_TESTNET = 97,
 }
+interface SplitFarmResult {
+  normalFarms: any[]
+  stableFarms: any[]
+}
+
+interface BlockResponse {
+  blocks: {
+    number: string
+  }[]
+}
+
+interface SingleFarmResponse {
+  id: string
+  reserveUSD: string
+  volumeUSD: string
+}
+
+interface FarmsResponse {
+  farmsAtLatestBlock: SingleFarmResponse[]
+  farmsOneWeekAgo: SingleFarmResponse[]
+}
+
 @Component({
   selector: 'app-valut-list',
   templateUrl: './valut-list.component.html',
   styleUrls: ['./valut-list.component.scss'],
 })
 export class ValutListComponent implements OnInit {
+
   loading: boolean = true;
 
   factoryAbi = [
@@ -1768,6 +1794,11 @@ export class ValutListComponent implements OnInit {
 
     return aa;
   });
+  blocks: any;
+  farmsResponse: any;
+  public LP_HOLDERS_FEE = 0.0017
+  public WEEKS_IN_A_YEAR = 52.1429;
+  getAprsForStableFarmValue : any;
   constructor(
     private fb: FormBuilder,
     private web3Service: Web3Service,
@@ -1776,7 +1807,8 @@ export class ValutListComponent implements OnInit {
     private valutDetilsService: ValutDetilsService,
     private router: Router,
     private apiService: ApiService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private lpAprService: LpAprService
 
   ) {
 
@@ -1921,14 +1953,17 @@ export class ValutListComponent implements OnInit {
     await this.fetchMasterChefV2Data(); // fetch  poolLength,totalRegularAllocPoint,totalSpecialAllocPoint,cakePerBlock data from masterchef contract
 
     //fetch masterchef data
-    await this.fetchMasterChefData();
+    await this.fetchMasterChefData(); // fech pool info of each lp pair baesd on pid (accCakePerShare,lastRewardBlock,allocPoint,totalBoostedShare ,isRegular)
 
     //fetch stable farm data
     let stableFarms = this.lpList2.filter(this.isStableFarm) as any[];
     await this.fetchStableFarmData(stableFarms);
 
-    //fetch public farm data
+    //fetch public farm data (setup data for balanceOf of token, balanceOf of quoteToken, balanceOf of masterChef, totalSupply of LP tokens)
+    //(stored into lpDataResults)
     await this.fetchPublicFarmsData(this.lpList2);
+
+
     const stableFarmsData = (this.stableFarmsResults as any[]).map(
       this.formatStableFarm
     );
@@ -1942,6 +1977,9 @@ export class ValutListComponent implements OnInit {
       },
       {}
     );
+
+    console.log("stableFarmsDataMap", stableFarmsDataMap);
+
     console.log('lpDataResults', this.lpDataResults);
     const lpData = this.lpDataResults.map(this.formatClassicFarmResponse);
     console.log('lpData', lpData);
@@ -1997,13 +2035,16 @@ export class ValutListComponent implements OnInit {
     console.log('farmsData farmsData with liqudity', farmsData);
 
     this.getFarmsPrices(farmsData, ChainId.BSC);
+    this.updateLPsAPR(ChainId.BSC, farmsData);
   }
 
   public async fetchMasterChefData() {
 
+    // modify lplist to  fetch poolinfo with the help of lp pid(with the help of masterchef contract address)
     let poolinfo = this.lpList2.map((farm: any) =>
       this.masterChefFarmCalls(farm, this.masterChefAddress)
     );
+    console.log("new pool info", poolinfo);
     poolinfo = poolinfo.filter((e: null) => e !== null);
     const result = poolinfo.map(async (e: any) => {
       const contract = new ethers.Contract(
@@ -2048,6 +2089,7 @@ export class ValutListComponent implements OnInit {
         },
       ]
     );
+    console.log("calls lp", calls);
     const chunkSize = calls.length / farms.length;
 
     const results = calls.map(async (e: any) => {
@@ -2062,7 +2104,7 @@ export class ValutListComponent implements OnInit {
     const finalResult = await Promise.all(results);
     const chunkReturn = chunk(finalResult, chunkSize);
     this.stableFarmsResults = chunkReturn;
-    console.log('fetchMasterChefData', chunkReturn);
+    console.log('stableFarmsResults', this.stableFarmsResults);
     // console.log("fetchMasterChefData", chunkReturn);
   }
 
@@ -2100,6 +2142,9 @@ export class ValutListComponent implements OnInit {
   };
 
   public async fetchPublicFarmsData(farms: any) {
+    console.log("farms abc", farms);
+
+    //setup data for balanceOf of token, balanceOf of quoteToken, balanceOf of masterChef, totalSupply of LP tokens
     const farmCalls = farms.flatMap((farm: any) =>
       this.publicFetchFarmCalls(
         farm,
@@ -2121,7 +2166,7 @@ export class ValutListComponent implements OnInit {
     const finalResult = await Promise.all(results);
     const chunkReturn = chunk(finalResult, chunkSize);
     this.lpDataResults = chunkReturn;
-    console.log('fetchPublicFarmsData', chunkReturn);
+    console.log('fetchPublicFarmsData 123',  this.lpDataResults);
   }
 
   masterChefFarmCalls = (farm: any, masterChefAddress: string) => {
@@ -2310,12 +2355,16 @@ export class ValutListComponent implements OnInit {
 
   getFarmsPrices(farms: any, chainId: number) {
     farms = farms.filter((e: any) => e.pid !== 0);
+
+
     const nativeStableFarm = farms.find((farm: any) =>
       this.equalsIgnoreCase(
         farm.lpAddress,
         this.nativeStableLpMap[ChainId.BSC].address
       )
     );
+
+
     const nativePriceUSD =
       +nativeStableFarm?.tokenPriceVsQuote !== 0
         ? this.FIXED_ONE.divUnsafe(
@@ -2323,6 +2372,8 @@ export class ValutListComponent implements OnInit {
           )
         : this.FIXED_ZERO;
     ;
+
+
     console.log('nativePriceUSD', nativePriceUSD);
 
     const farmsWithPrices = farms.map((farm: any) => {
@@ -2359,11 +2410,15 @@ export class ValutListComponent implements OnInit {
       return result;
     });
 
+    console.log("farmsWithPrices skop",farmsWithPrices);
+
     const aaa = farmsWithPrices.map((farm: any) => {
       let cakeRewardsAprAsString = '0';
+
       if (!this.cakePriceBusd) {
         return cakeRewardsAprAsString;
       }
+
       const totalLiquidity = FixedNumber.from(
         farm.lpTotalInQuoteToken
       ).mulUnsafe(FixedNumber.from(farm.quoteTokenPriceBusd));
@@ -2372,6 +2427,7 @@ export class ValutListComponent implements OnInit {
       if (totalLiquidity.isZero() || poolWeight.isZero()) {
         return cakeRewardsAprAsString;
       }
+
       const yearlyCakeRewardAllocation = poolWeight
         ? poolWeight.mulUnsafe(
             FixedNumber.from(this.BLOCKS_PER_YEAR).mulUnsafe(
@@ -2380,11 +2436,14 @@ export class ValutListComponent implements OnInit {
           )
         : this.FIXED_ZERO;
       ;
+
       const cakePriceBusd = FixedNumber.from(this.cakePriceBusd);
+
       const cakeRewardsApr = yearlyCakeRewardAllocation
         .mulUnsafe(cakePriceBusd)
         .divUnsafe(totalLiquidity)
         .mulUnsafe(this.FIXED_100);
+
       if (!cakeRewardsApr.isZero()) {
         cakeRewardsAprAsString = cakeRewardsApr.toUnsafeFloat().toFixed(2);
       }
@@ -2393,6 +2452,7 @@ export class ValutListComponent implements OnInit {
       farm.apr = cakeRewardsApr;
       return farm;
     });
+
     console.log(
       'farmsWithPrices quteToke',
       aaa.filter((e: any) => e != '0' || e.pid !== 0)
@@ -2566,5 +2626,290 @@ export class ValutListComponent implements OnInit {
     )
 
     return pair.priceOf(tokenA)
+  }
+
+
+  public getWeekAgoTimestamp() {
+    const weekAgo = sub(new Date(), { weeks: 1 })
+    return getUnixTime(weekAgo)
+  }
+
+  public async getAprsForStableFarm(stableFarm: any): Promise<BigNumber> {
+    const stableSwapAddress = stableFarm?.stableSwapAddress
+
+    try {
+      const dayAgo = sub(new Date(), { days: 1 })
+
+      const dayAgoTimestamp = getUnixTime(dayAgo)
+
+      const blockDayAgo = await this.getBlockAtTimestamp(dayAgoTimestamp)
+
+      // const { virtualPriceAtLatestBlock, virtualPriceOneDayAgo } = await stableSwapClient.request(
+      //   gql`
+      //     query virtualPriceStableSwap($stableSwapAddress: String, $blockDayAgo: Int!) {
+      //       virtualPriceAtLatestBlock: pairs(id: $stableSwapAddress) {
+      //         virtualPrice
+      //       }
+      //       virtualPriceOneDayAgo: pairs(id: $stableSwapAddress, block: { number: $blockDayAgo }) {
+      //         virtualPrice
+      //       }
+      //     }
+      //   `,
+      //   { stableSwapAddress, blockDayAgo },
+      // )
+
+
+      var client = require('graphql-client')({
+        url: 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange-stableswap',
+        headers: {
+          Authorization: 'Bearer '
+        }
+      });
+
+      var variables =  { stableSwapAddress, blockDayAgo }
+      client.query(`
+      query virtualPriceStableSwap($stableSwapAddress: String, $blockDayAgo: Int!) {
+        virtualPriceAtLatestBlock: pairs(id: $stableSwapAddress) {
+          virtualPrice
+        }
+        virtualPriceOneDayAgo: pairs(id: $stableSwapAddress, block: { number: $blockDayAgo }) {
+          virtualPrice
+        }
+      }
+    `, variables, function(req: any, res: any) {
+        if(res.status === 401) {
+          throw new Error('Not authorized')
+        }
+      })
+      .then((body: any)=> {
+        console.log(body)
+        this.getAprsForStableFarmValue = body
+      })
+      .catch(function(err: { message: any; }) {
+        console.log(err.message)
+      })
+
+
+      const virtualPrice = this.getAprsForStableFarmValue.virtualPriceAtLatestBlock[0]?.virtualPrice
+      const preVirtualPrice = this.getAprsForStableFarmValue.virtualPriceOneDayAgo[0]?.virtualPrice
+
+      const current = BigNumber.from(virtualPrice)
+      const prev = BigNumber.from(preVirtualPrice)
+
+      return current.sub(prev).div(prev)
+    } catch (error) {
+      console.error(error, '[LP APR Update] getAprsForStableFarm error')
+    }
+
+    return BigNumber.from('0')
+  }
+
+
+  public async getAprsForFarmGroup(addresses: string[], blockWeekAgo: number, chainId: number): Promise<AprMap>
+   {
+    try {
+
+      var client = require('graphql-client')({
+        url: 'https://bsc.streamingfast.io/subgraphs/name/pancakeswap/exchange-v2',
+        headers: {
+          Authorization: 'Bearer '
+        }
+      });
+
+      var variables = {
+        addresses, blockWeekAgo
+      }
+
+      client.query(`
+      query farmsBulk($addresses: [String]!, $blockWeekAgo: Int!) {
+        farmsAtLatestBlock: pairs(first: 30, where: { id_in: $addresses }) {
+          id
+          volumeUSD
+          reserveUSD
+        }
+        farmsOneWeekAgo: pairs(first: 30, where: { id_in: $addresses }, block: { number: $blockWeekAgo }) {
+          id
+          volumeUSD
+          reserveUSD
+        }
+      }
+    `, variables, function(req: any, res: any) {
+        if(res.status === 401) {
+          throw new Error('Not authorized')
+        }
+      })
+      .then((body: FarmsResponse)=> {
+        console.log(body)
+        this.farmsResponse = body
+      })
+      .catch(function(err: { message: any; }) {
+        console.log(err.message)
+      })
+
+
+      // const { farmsAtLatestBlock, farmsOneWeekAgo } = await infoClientWithChain(chainId).request<FarmsResponse>(
+      //   gql`
+      //     query farmsBulk($addresses: [String]!, $blockWeekAgo: Int!) {
+      //       farmsAtLatestBlock: pairs(first: 30, where: { id_in: $addresses }) {
+      //         id
+      //         volumeUSD
+      //         reserveUSD
+      //       }
+      //       farmsOneWeekAgo: pairs(first: 30, where: { id_in: $addresses }, block: { number: $blockWeekAgo }) {
+      //         id
+      //         volumeUSD
+      //         reserveUSD
+      //       }
+      //     }
+      //   `,
+      //   { addresses, blockWeekAgo },
+      // )
+      return  this.farmsResponse.farmsAtLatestBlock.reduce((aprMap: any, farm: any) => {
+        const farmWeekAgo = this.farmsResponse.farmsOneWeekAgo.find((oldFarm: any) => oldFarm.id === farm.id)
+        // In case farm is too new to estimate LP APR (i.e. not returned in farmsOneWeekAgo query) - return 0
+        let lpApr = BigNumber.from(0)
+        if (farmWeekAgo) {
+          const volume7d = BigNumber.from(farm.volumeUSD).div(BigNumber.from(farmWeekAgo.volumeUSD))
+          const lpFees7d = volume7d.mul(this.LP_HOLDERS_FEE)
+          const lpFeesInAYear = lpFees7d.mul(this.WEEKS_IN_A_YEAR)
+          // Some untracked pairs like KUN-QSD will report 0 volume
+          if (lpFeesInAYear.gt(0)) {
+            const liquidity = BigNumber.from(farm.reserveUSD)
+            lpApr = lpFeesInAYear.mul(100).div(liquidity)
+          }
+        }
+        return {
+          ...aprMap,
+          [farm.id]: lpApr.toTwos(2).toNumber(),
+        }
+      }, {})
+    } catch (error) {
+      throw new Error(`[LP APR Update] Failed to fetch LP APR data: ${error}`)
+    }
+  }
+
+
+  getBlockAtTimestamp = async (timestamp: number, chainId = ChainId.BSC) => {
+    try {
+      var client = require('graphql-client')({
+        url: 'https://api.thegraph.com/subgraphs/name/pancakeswap/blocks',
+        headers: {
+          Authorization: 'Bearer '
+        }
+      })
+
+      var variables = {
+        timestampGreater: timestamp, timestampLess: timestamp + 600
+      }
+
+      client.query(`query getBlock($timestampGreater: Int!, $timestampLess: Int!) {
+        blocks(first: 1, where: { timestamp_gt: $timestampGreater, timestamp_lt: $timestampLess }) {
+          number
+        }
+      }`, variables, function(req: any, res: any) {
+        if(res.status === 401) {
+          throw new Error('Not authorized')
+        }
+      })
+      .then((body: BlockResponse)=> {
+        console.log(body)
+        this.blocks = body
+      })
+      .catch(function(err: { message: any; }) {
+        console.log(err.message)
+      })
+
+      // const { blocks } = await blockClientWithChain(chainId).request<BlockResponse>(
+      //   `query getBlock($timestampGreater: Int!, $timestampLess: Int!) {
+      //     blocks(first: 1, where: { timestamp_gt: $timestampGreater, timestamp_lt: $timestampLess }) {
+      //       number
+      //     }
+      //   }`,
+      //   { timestampGreater: timestamp, timestampLess: timestamp + 600 },
+      // )
+      return parseInt(this.blocks[0].number, 10)
+    } catch (error) {
+      throw new Error(`Failed to fetch block number for ${timestamp}\n${error}`)
+    }
+  }
+
+
+  splitNormalAndStableFarmsReducer(result: SplitFarmResult, farm: any): SplitFarmResult {
+    const { normalFarms, stableFarms } = result
+
+    if (farm?.stableSwapAddress) {
+      return {
+        normalFarms,
+        stableFarms: [...stableFarms, farm],
+      }
+    }
+
+    return {
+      stableFarms,
+      normalFarms: [...normalFarms, farm],
+    }
+  }
+
+
+  //get lp apr
+  public async updateLPsAPR(chainId: number, allFarms: any[])
+  {
+
+    const { normalFarms, stableFarms }: SplitFarmResult = allFarms.reduce(this.splitNormalAndStableFarmsReducer, {
+      normalFarms: [],
+      stableFarms: [],
+    })
+
+    const lowerCaseAddresses = normalFarms.map((farm: any) => farm.lpAddress.toLowerCase())
+    console.info(`[LP APR Update] Fetching farm data for ${lowerCaseAddresses.length} addresses`)
+    // Split it into chunks of 30 addresses to avoid gateway timeout
+    const addressesInGroups = chunk<string>(lowerCaseAddresses, 30)
+    const weekAgoTimestamp = this.getWeekAgoTimestamp()
+
+    let blockWeekAgo: number
+    try {
+      blockWeekAgo = await this.getBlockAtTimestamp(weekAgoTimestamp, chainId)
+    } catch (error) {
+      console.error(error, 'LP APR Update] blockWeekAgo error')
+      return false
+    }
+
+    let allAprs: AprMap = {}
+    try {
+      for (const groupOfAddresses of addressesInGroups) {
+        // eslint-disable-next-line no-await-in-loop
+        const aprs = await this.getAprsForFarmGroup(groupOfAddresses, blockWeekAgo, chainId)
+        allAprs = { ...allAprs, ...aprs }
+      }
+      console.log("allAprs", allAprs);
+    } catch (error) {
+      console.error(error, '[LP APR Update] getAprsForFarmGroup error')
+      return false
+    }
+
+    try {
+      if (stableFarms?.length) {
+        const stableAprs: any[] = await Promise.all(stableFarms.map((f) => this.lpAprService.getAprsForStableFarm(f)))
+        console.log("stableAprs", stableAprs);
+        const stableAprsMap = stableAprs.reduce(
+          (result, apr, index) => ({
+            ...result,
+            [stableFarms[index].lpAddress]: apr.toTwos(2).toNumber(),
+          }),
+          {} as AprMap,
+        )
+
+        allAprs = { ...allAprs, ...stableAprsMap }
+      }
+    } catch (error) {
+      console.error(error, '[LP APR Update] getAprsForStableFarm error')
+    }
+
+    try {
+      return allAprs
+    } catch (error) {
+      console.error(error, '[LP APR Update] Failed to save LP APRs to redis')
+      return false
+    }
   }
 }

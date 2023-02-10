@@ -20,6 +20,7 @@ import { VaultDetailsComponent } from './component/vault-details/vault-details.c
 import { MessageService } from 'primeng/api';
 import { VaultSetupComponent } from './component/vault-setup/vault-setup.component';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
+import { ApolloModule } from 'apollo-angular';
 
 @NgModule({
   declarations: [
@@ -44,9 +45,10 @@ import { NgxUiLoaderModule } from 'ngx-ui-loader';
     DialogModule,
     ButtonModule,
     ToastModule,
-    NgxUiLoaderModule
+    NgxUiLoaderModule,
+    ApolloModule
   ],
-  providers: [MessageService],
+  providers: [MessageService,],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
