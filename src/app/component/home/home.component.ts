@@ -69,8 +69,10 @@ export class HomeComponent implements OnInit {
   public valutAddressList: any[] = [];
   public displayBasic: boolean= false;
   public valutCreateForm!: FormGroup;
-  public display: boolean = false;
-
+  public displayRiskNotice: boolean = false;
+  public displayMetamaskWarningPopup = false
+  public BASE_CURRENCY: string  = "0x55d398326f99059fF775485246999027B3197955";     //BUSD for Binance Smart chain
+  public pancakeFactoryContractAbi: any;
   constructor(
     private web3Service: Web3Service,
     private router: Router,
@@ -101,14 +103,14 @@ export class HomeComponent implements OnInit {
 
   checkRiskAcceptedOrNot() {
     if(sessionStorage.getItem("isRiskAccepted") && sessionStorage.getItem("isRiskAccepted") == "true"){
-      this.display = false;
+      this.displayRiskNotice = false;
     } else{
-      this.display = true;
+      this.displayRiskNotice = true;
     }
   }
 closeWarningDialog(){
   sessionStorage.setItem("isRiskAccepted", "true");
-  this.display = false;
+  this.displayRiskNotice = false;
 }
 
   async getAbiValue(){
@@ -132,12 +134,26 @@ closeWarningDialog(){
     (await this.commonService.getAbiJSON(lpAbiUrl)).subscribe(async (e) => {
       this.lpAbi = e;
     });
+
+    //get cake abi url from api service
+    const pancakeSwapFactoryV2Url = this.apiService.pancakeSwapFactoryV2Abi;
+    //get cake abi value from artifacts folder
+    (await this.commonService.getAbiJSON(pancakeSwapFactoryV2Url)).subscribe(async (e) => {
+      debugger
+      this.pancakeFactoryContractAbi = e;
+    });
   }
 
 
   public connectWallet() {
     this.web3Service.connectWallet().then((e) => {
-      window.location.reload();
+      console.log("e sa",e);
+      if(e != undefined){
+        window.location.reload();
+      } else{
+        this.displayMetamaskWarningPopup = true;
+      }
+      //window.location.reload();
     });
   }
   createValut() {
@@ -148,6 +164,8 @@ closeWarningDialog(){
       //load provider
       await this.web3Service.connectWallet().then((e) => {
         this.web3Provider = e;
+        console.log("web 3",this.web3Provider);
+
         // const aa = this.web3Provider.getBalance('0xa0Ee7A142d267C1f36714E4a8F75612F20a79720').then((e: any)=>{
         //   console.log("balance",   ethers.utils.formatEther(e));
         // });
@@ -155,7 +173,7 @@ closeWarningDialog(){
   }
 
   async getDeployedValut(){
-
+debugger
     const contract = this.getContract(this.globalService.deployedContract,this.factoryAbi,this.web3Provider.getSigner());
 
     this.valutAddressList = await contract['listAllVaults']();
@@ -165,10 +183,12 @@ closeWarningDialog(){
       const name = await contract['name']();
       const owner = await contract['owner']();
       console.log("owner", owner);
+      const bal = await this.lpTokenToBaseTokenConversionRate(stack);
+      console.log("balance", bal);
       const balance = await contract['balance']();
       return {
         "address": e,
-        "balance": balance/Math.pow(10, 18),
+        "balance": (balance/Math.pow(10, 18) * bal).toFixed(2),
         "lpPairAddress": stack,
         "lpPairName": farms.find(e => e.lpAddress == stack)?.lpSymbol,
         "type": "Private",
@@ -182,14 +202,14 @@ closeWarningDialog(){
     this.valutAddressList = this.valutAddressList.filter(b => b.owner == sessionStorage.getItem("account"));
 
     if(this.valutAddressList.length > 0){
-    this.valutAddressList.push({
-      "address" : "0x1aba4273eDA950c1fd842d872AE1Ab21C5012664",
-      "balance": 0,
-      "lpPairAddress": "0x804678fa97d91B974ec2af3c843270886528a9E6",
-      "lpPairName": "Delta neutral vault",
-      "type": "Whitelisted",
-      "name": "Delta neutral vault",
-    })
+    // this.valutAddressList.push({
+    //   "address" : "0x1aba4273eDA950c1fd842d872AE1Ab21C5012664",
+    //   "balance": 0,
+    //   "lpPairAddress": "0x804678fa97d91B974ec2af3c843270886528a9E6",
+    //   "lpPairName": "Delta neutral vault",
+    //   "type": "Whitelisted",
+    //   "name": "Delta neutral vault",
+    // })
   }
 
 
@@ -284,7 +304,7 @@ async approve(){
 } catch (err: any) {
   this.btn_loader = false;
   this.showError(err.message)
-      console.log('revert reason:', err.message);
+  console.log('revert reason:', err.message);
 }
   // withdraw.then((e:any) =>{
   //   this.checkApproval();
@@ -323,6 +343,55 @@ goToSetup(type: any){
   if(type != "Private"){
     this.router.navigate(['/vaultSetup', isPrivatevalut]);
   }
+}
 
+async lpTokenToBaseTokenConversionRate(lpToken: string): Promise<number> {
+  console.log(`Calculating value of lp token: ${lpToken}`);
+  const lpContract = this.getContract(lpToken,  this.lpAbi, this.web3Provider.getSigner());
+  debugger
+  const reserves = await lpContract['getReserves']();
+  console.log(`Reserves: ${reserves}`);
+  const reserve0 = reserves._reserve0;
+  const reserve1 = reserves._reserve1;
+  // this.currentRow = this.currentRow + `${await new ethers.Contract(await lpContract.token0(), erc20Abi, this.provider).name()},`;
+  // this.currentRow = this.currentRow + `${await new ethers.Contract(await lpContract.token1(), erc20Abi, this.provider).name()},`;
+  console.log(`Reserves of the pool, reserve0: ${reserve0}, reserve1: ${reserve1}`);
+  // this.currentRow = this.currentRow + `${reserve0},`;
+  // this.currentRow = this.currentRow + `${reserve1},`;
+  const token0 = await lpContract['token0']();
+  const token1 = await lpContract['token1']();
+  // this.currentRow = this.currentRow + `${token0},`;
+  // this.currentRow = this.currentRow + `${token1},`;
+  const reserve0InBaseToken = (await this.tokenToBaseTokenConversionRate(token0)) * reserve0;
+  const reserve1InBaseToken = (await this.tokenToBaseTokenConversionRate(token1)) * reserve1;
+  // this.currentRow = this.currentRow + `${reserve0InBaseToken},`;
+  // this.currentRow = this.currentRow + `${reserve1InBaseToken},`;
+  const lpTotalSuppy = await lpContract['totalSupply']();
+  // this.currentRow = this.currentRow + `${lpTotalSuppy},`;
+  return (reserve0InBaseToken + reserve1InBaseToken) / lpTotalSuppy;
+}
+
+async tokenToBaseTokenConversionRate(token: string): Promise<number> {
+  console.log(`Calculating conversion rate from token: ${token} to base token`);
+  if (token === this.BASE_CURRENCY) {
+      return 1;
+  }
+  console.log(`Fetching LP address from PancakeSwap Factory...`);
+  const pancakeFactoryContract = this.getContract(this.globalService.pancakeSwapFactoryV2Address, this.pancakeFactoryContractAbi, this.web3Provider);
+
+  const lpAddress = await pancakeFactoryContract['getPair'](token, this.BASE_CURRENCY);
+  console.log(`Fetching reserves...`);
+  const lpContract = this.getContract(lpAddress, this.lpAbi, this.web3Provider.getSigner());
+  const reserves = await lpContract['getReserves']();
+  const reserve0 = reserves._reserve0;
+  const reserve1 = reserves._reserve1;
+  //console.log(`${await new ethers.Contract(token, erc20Abi, this.provider).name()}  -  ${await new ethers.Contract(this.BASE_CURRENCY, erc20Abi, this.provider).name()}   LP Reserves, reserve0 ${reserve0}, reserve1: ${reserve1}`);
+  const [token0, token1] = this.arrangeTokens(token, this.BASE_CURRENCY);
+  console.log(`After arranging, token0: ${token0}, token1: ${token1}`);
+  return token0 === token ? reserve1 / reserve0 : reserve0 / reserve1;
+}
+
+arrangeTokens(tokenA: string, tokenB: string): [string, string] {
+  return tokenA.toLowerCase() < tokenB.toLowerCase() ? [tokenA, tokenB] : [tokenB, tokenA];
 }
 }

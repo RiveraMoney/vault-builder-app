@@ -42,6 +42,7 @@ export class Web3Service {
   }
 
   public async connectWallet() {
+    if(window.ethereum && window.ethereum.isMetaMask) {
     console.log("Opening a dialog", this.web3Modal);
     try {
       //const instance = await this.web3Modal.connect();
@@ -71,6 +72,9 @@ export class Web3Service {
       return this.library;
     } catch (e) {
       console.log("Could not get a wallet connection", e);
+      return;
+    }}
+    else{
       return;
     }
   }

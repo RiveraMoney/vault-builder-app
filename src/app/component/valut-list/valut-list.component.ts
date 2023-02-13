@@ -18,7 +18,9 @@ import { CommonService } from 'src/app/service/common.service';
 import farms from 'src/assets/constants/farms/56';
 import { AprMap } from 'dist/web3-modal/assets/constants/farms/src/types';
 import { getUnixTime, sub } from 'date-fns';
-import { LpAprService } from 'src/app/service/lp-apr.service';
+import { GetAprsForFarmGroupService } from 'src/app/service/getAprsForFarmGroup.service';
+import { GetAprsForStableFarmServices } from 'src/app/service/getAprsForStableFarm.service';
+import { GetBlockAtTimestampService } from 'src/app/service/getBlockAtTimestamp.service';
 declare var $: any;
 enum ChainId {
   ETHEREUM = 1,
@@ -1808,7 +1810,9 @@ export class ValutListComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     private commonService: CommonService,
-    private lpAprService: LpAprService
+    private getAprsForFarmGroupService: GetAprsForFarmGroupService,
+    private getAprsForStableFarmServices: GetAprsForStableFarmServices,
+    private getBlockAtTimestampService: GetBlockAtTimestampService
 
   ) {
 
@@ -2634,205 +2638,6 @@ export class ValutListComponent implements OnInit {
     return getUnixTime(weekAgo)
   }
 
-  public async getAprsForStableFarm(stableFarm: any): Promise<BigNumber> {
-    const stableSwapAddress = stableFarm?.stableSwapAddress
-
-    try {
-      const dayAgo = sub(new Date(), { days: 1 })
-
-      const dayAgoTimestamp = getUnixTime(dayAgo)
-
-      const blockDayAgo = await this.getBlockAtTimestamp(dayAgoTimestamp)
-
-      // const { virtualPriceAtLatestBlock, virtualPriceOneDayAgo } = await stableSwapClient.request(
-      //   gql`
-      //     query virtualPriceStableSwap($stableSwapAddress: String, $blockDayAgo: Int!) {
-      //       virtualPriceAtLatestBlock: pairs(id: $stableSwapAddress) {
-      //         virtualPrice
-      //       }
-      //       virtualPriceOneDayAgo: pairs(id: $stableSwapAddress, block: { number: $blockDayAgo }) {
-      //         virtualPrice
-      //       }
-      //     }
-      //   `,
-      //   { stableSwapAddress, blockDayAgo },
-      // )
-
-
-      var client = require('graphql-client')({
-        url: 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange-stableswap',
-        headers: {
-          Authorization: 'Bearer '
-        }
-      });
-
-      var variables =  { stableSwapAddress, blockDayAgo }
-      client.query(`
-      query virtualPriceStableSwap($stableSwapAddress: String, $blockDayAgo: Int!) {
-        virtualPriceAtLatestBlock: pairs(id: $stableSwapAddress) {
-          virtualPrice
-        }
-        virtualPriceOneDayAgo: pairs(id: $stableSwapAddress, block: { number: $blockDayAgo }) {
-          virtualPrice
-        }
-      }
-    `, variables, function(req: any, res: any) {
-        if(res.status === 401) {
-          throw new Error('Not authorized')
-        }
-      })
-      .then((body: any)=> {
-        console.log(body)
-        this.getAprsForStableFarmValue = body
-      })
-      .catch(function(err: { message: any; }) {
-        console.log(err.message)
-      })
-
-
-      const virtualPrice = this.getAprsForStableFarmValue.virtualPriceAtLatestBlock[0]?.virtualPrice
-      const preVirtualPrice = this.getAprsForStableFarmValue.virtualPriceOneDayAgo[0]?.virtualPrice
-
-      const current = BigNumber.from(virtualPrice)
-      const prev = BigNumber.from(preVirtualPrice)
-
-      return current.sub(prev).div(prev)
-    } catch (error) {
-      console.error(error, '[LP APR Update] getAprsForStableFarm error')
-    }
-
-    return BigNumber.from('0')
-  }
-
-
-  public async getAprsForFarmGroup(addresses: string[], blockWeekAgo: number, chainId: number): Promise<AprMap>
-   {
-    try {
-
-      var client = require('graphql-client')({
-        url: 'https://bsc.streamingfast.io/subgraphs/name/pancakeswap/exchange-v2',
-        headers: {
-          Authorization: 'Bearer '
-        }
-      });
-
-      var variables = {
-        addresses, blockWeekAgo
-      }
-
-      client.query(`
-      query farmsBulk($addresses: [String]!, $blockWeekAgo: Int!) {
-        farmsAtLatestBlock: pairs(first: 30, where: { id_in: $addresses }) {
-          id
-          volumeUSD
-          reserveUSD
-        }
-        farmsOneWeekAgo: pairs(first: 30, where: { id_in: $addresses }, block: { number: $blockWeekAgo }) {
-          id
-          volumeUSD
-          reserveUSD
-        }
-      }
-    `, variables, function(req: any, res: any) {
-        if(res.status === 401) {
-          throw new Error('Not authorized')
-        }
-      })
-      .then((body: FarmsResponse)=> {
-        console.log(body)
-        this.farmsResponse = body
-      })
-      .catch(function(err: { message: any; }) {
-        console.log(err.message)
-      })
-
-
-      // const { farmsAtLatestBlock, farmsOneWeekAgo } = await infoClientWithChain(chainId).request<FarmsResponse>(
-      //   gql`
-      //     query farmsBulk($addresses: [String]!, $blockWeekAgo: Int!) {
-      //       farmsAtLatestBlock: pairs(first: 30, where: { id_in: $addresses }) {
-      //         id
-      //         volumeUSD
-      //         reserveUSD
-      //       }
-      //       farmsOneWeekAgo: pairs(first: 30, where: { id_in: $addresses }, block: { number: $blockWeekAgo }) {
-      //         id
-      //         volumeUSD
-      //         reserveUSD
-      //       }
-      //     }
-      //   `,
-      //   { addresses, blockWeekAgo },
-      // )
-      return  this.farmsResponse.farmsAtLatestBlock.reduce((aprMap: any, farm: any) => {
-        const farmWeekAgo = this.farmsResponse.farmsOneWeekAgo.find((oldFarm: any) => oldFarm.id === farm.id)
-        // In case farm is too new to estimate LP APR (i.e. not returned in farmsOneWeekAgo query) - return 0
-        let lpApr = BigNumber.from(0)
-        if (farmWeekAgo) {
-          const volume7d = BigNumber.from(farm.volumeUSD).div(BigNumber.from(farmWeekAgo.volumeUSD))
-          const lpFees7d = volume7d.mul(this.LP_HOLDERS_FEE)
-          const lpFeesInAYear = lpFees7d.mul(this.WEEKS_IN_A_YEAR)
-          // Some untracked pairs like KUN-QSD will report 0 volume
-          if (lpFeesInAYear.gt(0)) {
-            const liquidity = BigNumber.from(farm.reserveUSD)
-            lpApr = lpFeesInAYear.mul(100).div(liquidity)
-          }
-        }
-        return {
-          ...aprMap,
-          [farm.id]: lpApr.toTwos(2).toNumber(),
-        }
-      }, {})
-    } catch (error) {
-      throw new Error(`[LP APR Update] Failed to fetch LP APR data: ${error}`)
-    }
-  }
-
-
-  getBlockAtTimestamp = async (timestamp: number, chainId = ChainId.BSC) => {
-    try {
-      var client = require('graphql-client')({
-        url: 'https://api.thegraph.com/subgraphs/name/pancakeswap/blocks',
-        headers: {
-          Authorization: 'Bearer '
-        }
-      })
-
-      var variables = {
-        timestampGreater: timestamp, timestampLess: timestamp + 600
-      }
-
-      client.query(`query getBlock($timestampGreater: Int!, $timestampLess: Int!) {
-        blocks(first: 1, where: { timestamp_gt: $timestampGreater, timestamp_lt: $timestampLess }) {
-          number
-        }
-      }`, variables, function(req: any, res: any) {
-        if(res.status === 401) {
-          throw new Error('Not authorized')
-        }
-      })
-      .then((body: BlockResponse)=> {
-        console.log(body)
-        this.blocks = body
-      })
-      .catch(function(err: { message: any; }) {
-        console.log(err.message)
-      })
-
-      // const { blocks } = await blockClientWithChain(chainId).request<BlockResponse>(
-      //   `query getBlock($timestampGreater: Int!, $timestampLess: Int!) {
-      //     blocks(first: 1, where: { timestamp_gt: $timestampGreater, timestamp_lt: $timestampLess }) {
-      //       number
-      //     }
-      //   }`,
-      //   { timestampGreater: timestamp, timestampLess: timestamp + 600 },
-      // )
-      return parseInt(this.blocks[0].number, 10)
-    } catch (error) {
-      throw new Error(`Failed to fetch block number for ${timestamp}\n${error}`)
-    }
-  }
-
 
   splitNormalAndStableFarmsReducer(result: SplitFarmResult, farm: any): SplitFarmResult {
     const { normalFarms, stableFarms } = result
@@ -2868,7 +2673,8 @@ export class ValutListComponent implements OnInit {
 
     let blockWeekAgo: number
     try {
-      blockWeekAgo = await this.getBlockAtTimestamp(weekAgoTimestamp, chainId)
+       blockWeekAgo = await this.getBlockAtTimestampService.getBlockAtTimestamp(weekAgoTimestamp, chainId);
+     // console.log(blockWeekAgo);
     } catch (error) {
       console.error(error, 'LP APR Update] blockWeekAgo error')
       return false
@@ -2878,8 +2684,8 @@ export class ValutListComponent implements OnInit {
     try {
       for (const groupOfAddresses of addressesInGroups) {
         // eslint-disable-next-line no-await-in-loop
-        const aprs = await this.getAprsForFarmGroup(groupOfAddresses, blockWeekAgo, chainId)
-        allAprs = { ...allAprs, ...aprs }
+        const aprs = await this.getAprsForFarmGroupService.getAprsForFarmGroup(groupOfAddresses, blockWeekAgo, chainId)
+        // allAprs = { ...allAprs, ...aprs }
       }
       console.log("allAprs", allAprs);
     } catch (error) {
@@ -2889,7 +2695,7 @@ export class ValutListComponent implements OnInit {
 
     try {
       if (stableFarms?.length) {
-        const stableAprs: any[] = await Promise.all(stableFarms.map((f) => this.lpAprService.getAprsForStableFarm(f)))
+        const stableAprs: any[] = await Promise.all(stableFarms.map((f) => this.getAprsForStableFarmServices.getAprsForStableFarm(f)))
         console.log("stableAprs", stableAprs);
         const stableAprsMap = stableAprs.reduce(
           (result, apr, index) => ({
@@ -2906,7 +2712,7 @@ export class ValutListComponent implements OnInit {
     }
 
     try {
-      return allAprs
+      return ""
     } catch (error) {
       console.error(error, '[LP APR Update] Failed to save LP APRs to redis')
       return false

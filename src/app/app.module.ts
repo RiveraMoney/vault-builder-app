@@ -20,7 +20,9 @@ import { VaultDetailsComponent } from './component/vault-details/vault-details.c
 import { MessageService } from 'primeng/api';
 import { VaultSetupComponent } from './component/vault-setup/vault-setup.component';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
-import { ApolloModule } from 'apollo-angular';
+import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
+import { InMemoryCache } from '@apollo/client';
+import { HttpLink } from 'apollo-angular/http'
 
 @NgModule({
   declarations: [
@@ -48,7 +50,18 @@ import { ApolloModule } from 'apollo-angular';
     NgxUiLoaderModule,
     ApolloModule
   ],
-  providers: [MessageService,],
+  providers: [MessageService,{
+    provide: APOLLO_OPTIONS,
+    useFactory(httpLink: HttpLink) {
+      return {
+        cache: new InMemoryCache(),
+        link: httpLink.create({
+          uri: 'https://bsc.streamingfast.io/subgraphs/name/pancakeswap/exchange-v2'
+        })
+      }
+    },
+    deps: [HttpLink]
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

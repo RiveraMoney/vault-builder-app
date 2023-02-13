@@ -7,6 +7,7 @@ export class GlobalService {
 
   constructor() { }
 
+  public pancakeSwapFactoryV2Address: string = '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73'
   public rewardTokenAddress: any = '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82'; // now cake as reward token
   public mlcTokenAdress:any = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'; // now wbnb as Most liquid currency(mlc)
   public masterChefAddress: any = '0xa5f8C5Dbd5F286960b9d90548680aE5ebFf07652';

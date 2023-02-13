@@ -11,4 +11,5 @@ export class ApiService {
   pancakeVaultFactoryV1Abi = 'assets/artifacts/src/PancakeVaultFactoryV1.sol/PancakeVaultFactoryV1.json'
   pancakeLpsAbi = 'assets/abiLists/pancakeLpsAbi.json'
   pancakeFarmList = 'assets/constants/farms'
+  pancakeSwapFactoryV2Abi = 'assets/abiLists/pancakeSwapFactoryV2.json'
 }
