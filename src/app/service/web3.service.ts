@@ -57,10 +57,37 @@ export class Web3Service {
       const chainId = network.chainId;
       const binanceTestChainId = '0x38'
       if (chainId != 56) {
+        try {
         await this.provider.request({
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: binanceTestChainId }],
         });
+      } catch (switchError: any) {
+        // This error code indicates that the chain has not been added to MetaMask.
+        if (switchError.code === 4902) {
+          try {
+            await this.provider.request({
+              method: 'wallet_addEthereumChain',
+              params: [
+                {
+                  chainId: '0x38',
+                  chainName: 'Smart Chain',
+                  rpcUrls: ['https://bsc-dataseed.binance.org/'] /* ... */,
+                  nativeCurrency: {
+                    name: "BNB",
+                    symbol: "BNB",
+                    decimals: 18
+                },
+                  blockExplorerUrls: ["https://bscscan.com"]
+                },
+              ],
+            });
+          } catch (addError) {
+            // handle "add" error
+          }
+        }
+        // handle other "switch" errors
+      }
       }
       //sessionStorage.setItem("library", JSON.stringify(this.library));
       sessionStorage.setItem("account", accounts[0]);
