@@ -19,9 +19,20 @@ export class VaultDetailsComponent implements OnInit {
   public web3Provider: any;
   public factoryAbi:any;
   public selectedPool: any;
-  public aprValue: any;
+  public apr: any;
   public isDeployed = false;
   public btn_loader = false;
+  public initialInvestment = 100000; //static for now
+  public fees = 1.2; // for bsc network
+  public investmentDuration = 12; //static for now
+  public listOfCalculation: any[] = [];
+  public z: number = 0;
+  public t: number = 0;
+  public tmin: number = 0;
+  public timeToShow: number = 0;
+  public stepWiseToshow: number = 0;
+  public netApyToShow: number = 0;
+  public rangeValue: number = 0;
   constructor(
     private valutDetilsService: ValutDetilsService,
     private fb: FormBuilder,
@@ -43,7 +54,7 @@ export class VaultDetailsComponent implements OnInit {
         this.router.navigate(['/vault']);
       }
       var apr = +(this.selectedPool.apr._value);
-      this.aprValue = apr.toFixed(2);
+      this.apr = apr.toFixed(2);
     });
 
     this.valutCreateForm = this.fb.group({
@@ -124,15 +135,16 @@ export class VaultDetailsComponent implements OnInit {
 
   selectLp(){
     var apr = +(this.selectedPool.apr._value);
-      this.aprValue = apr.toFixed(2);
+      this.apr = apr.toFixed(2);
 
      this.valutCreateForm.patchValue({
       vaultType: 'Auto-compounding',
       lpPair: this.selectedPool.lpSymbol,
       protocol: "Pancakeswap",
       chain: 'Pancakeswap',
-      apy: this.aprValue
+      apy: this.apr
     });
+    this.calculation();
     $('#profile').modal('show');
   }
 
@@ -150,5 +162,46 @@ export class VaultDetailsComponent implements OnInit {
   goToDashboard(){
     $('#profile').modal('hide');
     this.router.navigate(['/']);
+  }
+
+
+  public calculation(): void{
+
+    this.listOfCalculation = [];
+    this.z = this.initialInvestment / (+this.fees);
+    this.t = +(365 * (1 + Math.sqrt(1 + 8 * this.z))/(2 * this.z * (this.apr/100)));
+    this.tmin = Math.ceil((this.investmentDuration * 30)/ this.t);
+    if(this.tmin > 2){
+      //this.isDisplay = true;
+      for(let i = 1;i<=this.tmin;i++) {
+        let cmdAmnt = 0;
+        let time = i * this.t;
+        let orgAmnt = (this.initialInvestment * (1 + (this.apr/100) * (time/365)));
+        if(i == 1){
+        cmdAmnt = (this.initialInvestment * (1 + (this.apr/100) * (this.t/365))) - (+this.fees);
+        }else{
+          const index : number = i - 2;
+          cmdAmnt = (this.listOfCalculation[index]?.compoundAmout * (1 + (this.apr/100) * (this.t/365))) - (+this.fees);
+        }
+        let stpWise = cmdAmnt - this.initialInvestment + (+this.fees);
+        let orgApr = this.apr;
+        let ntApy = (((cmdAmnt - this.initialInvestment)*365/time)/this.initialInvestment) * 100;
+        this.listOfCalculation.push({time: time, orginalAmout: orgAmnt, compoundAmout: cmdAmnt, stepwiseH:stpWise, orginalArp: orgApr, netApy:ntApy})
+      }
+
+     this.timeToShow = this.listOfCalculation[0].time;
+     this.stepWiseToshow = this.listOfCalculation[0].stepwiseH;
+     this.netApyToShow = (this.listOfCalculation[this.listOfCalculation.length - 1].netApy).toFixed(2);
+      console.log("this.listOfCalculation", this.listOfCalculation);
+
+
+
+    }else{
+      //this.isDisplay = false;
+    }
+
+   console.log("this.listOfCalculation", this.listOfCalculation);
+
+
   }
 }
