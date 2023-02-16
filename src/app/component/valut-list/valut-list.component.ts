@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 import { ApiService } from 'src/app/service/api.service';
 import { CommonService } from 'src/app/service/common.service';
 import farms from 'src/assets/constants/farms/56';
-import { AprMap } from 'dist/web3-modal/assets/constants/farms/src/types';
+import { AprMap } from 'src/assets/constants/farms/src/types';
 import { getUnixTime, sub } from 'date-fns';
 import { GetAprsForFarmGroupService } from 'src/app/service/getAprsForFarmGroup.service';
 import { GetAprsForStableFarmServices } from 'src/app/service/getAprsForStableFarm.service';
@@ -1800,7 +1800,7 @@ export class ValutListComponent implements OnInit {
   farmsResponse: any;
   public LP_HOLDERS_FEE = 0.0017
   public WEEKS_IN_A_YEAR = 52.1429;
-  getAprsForStableFarmValue : any;
+  getAprsForStableFarmValue: any;
   constructor(
     private fb: FormBuilder,
     private web3Service: Web3Service,
@@ -1847,21 +1847,21 @@ export class ValutListComponent implements OnInit {
       approvalDelay: BigNumber.from(21600),
       rewardToLp0Route: this.getVaultCreateRoute(this.selectedPool.token.address),
       rewardToLp1Route: this.getVaultCreateRoute(this.selectedPool.quoteToken.address),
-      tokenName : this.valutCreateForm.get('vaultName')?.value,
+      tokenName: this.valutCreateForm.get('vaultName')?.value,
       tokenSymbol: this.valutCreateForm.get('vaultName')?.value
     };
     const poolInfoByAdress = await contract['createVault'](params);
   }
 
 
-  getVaultCreateRoute(lpToken: any){
-    if(lpToken == this.globalService.rewardTokenAddress){
+  getVaultCreateRoute(lpToken: any) {
+    if (lpToken == this.globalService.rewardTokenAddress) {
       return [this.globalService.rewardTokenAddress];
-    } else if(lpToken == this.globalService.mlcTokenAdress){
+    } else if (lpToken == this.globalService.mlcTokenAdress) {
       return [this.globalService.rewardTokenAddress, this.globalService.mlcTokenAdress];
-    } else if(this.globalService.rewardTokenAddress == this.globalService.mlcTokenAdress){
-     return [this.globalService.rewardTokenAddress, lpToken];
-    } else{
+    } else if (this.globalService.rewardTokenAddress == this.globalService.mlcTokenAdress) {
+      return [this.globalService.rewardTokenAddress, lpToken];
+    } else {
       return [this.globalService.rewardTokenAddress, this.globalService.mlcTokenAdress, lpToken];
     }
   }
@@ -1887,12 +1887,12 @@ export class ValutListComponent implements OnInit {
 
     //get the farms list from local
 
-    this.lpList2 = farms.slice(0,21);
+    this.lpList2 = farms.slice(0, 21);
     // this.lpList2 = this.lpList2.map((e: any) =>{
     //   return {...e, lpSymbol: e.lpSymbol, apr: e.apr?.toFixed(2), liquidity: e.liquidity}
     // })
-      // this.fetchMasterChefV2Data();
-      this.setupPooldata();
+    // this.fetchMasterChefV2Data();
+    this.setupPooldata();
 
     // // const factoryAbiUrl = this.apiService.pancakeFarmList + '56.ts';
     // // //get factory abi value from artifacts folder
@@ -2071,27 +2071,27 @@ export class ValutListComponent implements OnInit {
         token: { decimals: any };
         quoteToken: { decimals: any };
       }) => [
-        {
-          address: f.stableSwapAddress,
-          name: 'balances',
-          params: [0],
-        },
-        {
-          address: f.stableSwapAddress,
-          name: 'balances',
-          params: [1],
-        },
-        {
-          address: f.stableSwapAddress,
-          name: 'get_dy',
-          params: [0, 1, parseUnits('1', f.token.decimals)],
-        },
-        {
-          address: f.stableSwapAddress,
-          name: 'get_dy',
-          params: [1, 0, parseUnits('1', f.quoteToken.decimals)],
-        },
-      ]
+          {
+            address: f.stableSwapAddress,
+            name: 'balances',
+            params: [0],
+          },
+          {
+            address: f.stableSwapAddress,
+            name: 'balances',
+            params: [1],
+          },
+          {
+            address: f.stableSwapAddress,
+            name: 'get_dy',
+            params: [0, 1, parseUnits('1', f.token.decimals)],
+          },
+          {
+            address: f.stableSwapAddress,
+            name: 'get_dy',
+            params: [1, 0, parseUnits('1', f.quoteToken.decimals)],
+          },
+        ]
     );
     console.log("calls lp", calls);
     const chunkSize = calls.length / farms.length;
@@ -2170,17 +2170,17 @@ export class ValutListComponent implements OnInit {
     const finalResult = await Promise.all(results);
     const chunkReturn = chunk(finalResult, chunkSize);
     this.lpDataResults = chunkReturn;
-    console.log('fetchPublicFarmsData 123',  this.lpDataResults);
+    console.log('fetchPublicFarmsData 123', this.lpDataResults);
   }
 
   masterChefFarmCalls = (farm: any, masterChefAddress: string) => {
     const { pid } = farm;
     return pid || pid === 0
       ? {
-          address: masterChefAddress,
-          name: 'poolInfo',
-          params: [pid],
-        }
+        address: masterChefAddress,
+        name: 'poolInfo',
+        params: [pid],
+      }
       : null;
   };
 
@@ -2372,8 +2372,8 @@ export class ValutListComponent implements OnInit {
     const nativePriceUSD =
       +nativeStableFarm?.tokenPriceVsQuote !== 0
         ? this.FIXED_ONE.divUnsafe(
-            FixedNumber.from(nativeStableFarm.tokenPriceVsQuote)
-          )
+          FixedNumber.from(nativeStableFarm.tokenPriceVsQuote)
+        )
         : this.FIXED_ZERO;
     ;
 
@@ -2414,7 +2414,7 @@ export class ValutListComponent implements OnInit {
       return result;
     });
 
-    console.log("farmsWithPrices skop",farmsWithPrices);
+    console.log("farmsWithPrices skop", farmsWithPrices);
 
     const aaa = farmsWithPrices.map((farm: any) => {
       let cakeRewardsAprAsString = '0';
@@ -2434,10 +2434,10 @@ export class ValutListComponent implements OnInit {
 
       const yearlyCakeRewardAllocation = poolWeight
         ? poolWeight.mulUnsafe(
-            FixedNumber.from(this.BLOCKS_PER_YEAR).mulUnsafe(
-              FixedNumber.from(String(this.cakePerBlock))
-            )
+          FixedNumber.from(this.BLOCKS_PER_YEAR).mulUnsafe(
+            FixedNumber.from(String(this.cakePerBlock))
           )
+        )
         : this.FIXED_ZERO;
       ;
 
@@ -2519,8 +2519,8 @@ export class ValutListComponent implements OnInit {
     if (quoteTokenFarm.quoteToken.symbol === wNative) {
       return quoteTokenFarm.tokenPriceVsQuote
         ? nativePriceUSD.mulUnsafe(
-            FixedNumber.from(quoteTokenFarm.tokenPriceVsQuote)
-          )
+          FixedNumber.from(quoteTokenFarm.tokenPriceVsQuote)
+        )
         : this.FIXED_ZERO;
     }
 
@@ -2657,8 +2657,7 @@ export class ValutListComponent implements OnInit {
 
 
   //get lp apr
-  public async updateLPsAPR(chainId: number, allFarms: any[])
-  {
+  public async updateLPsAPR(chainId: number, allFarms: any[]) {
 
     const { normalFarms, stableFarms }: SplitFarmResult = allFarms.reduce(this.splitNormalAndStableFarmsReducer, {
       normalFarms: [],
@@ -2673,8 +2672,8 @@ export class ValutListComponent implements OnInit {
 
     let blockWeekAgo: number
     try {
-       blockWeekAgo = await this.getBlockAtTimestampService.getBlockAtTimestamp(weekAgoTimestamp, chainId);
-     // console.log(blockWeekAgo);
+      blockWeekAgo = await this.getBlockAtTimestampService.getBlockAtTimestamp(weekAgoTimestamp, chainId);
+      // console.log(blockWeekAgo);
     } catch (error) {
       console.error(error, 'LP APR Update] blockWeekAgo error')
       return false
