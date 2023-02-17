@@ -107,13 +107,13 @@
                 </div>
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
                   <div>Balance <br>${{valut?.balance}}</div>
-                  <div *ngIf="valut?.lpPairName != 'Delta neutral vault'"> Current APY <br> 19.67%</div>
-                  <div *ngIf="valut?.lpPairName == 'Delta neutral vault'"> Current APY <br> 0%</div>
+                  <div class="txt_algn_rgt" *ngIf="valut?.lpPairName != 'Delta neutral vault'"> Current APY <br> 19.67%</div>
+                  <div class="txt_algn_rgt" *ngIf="valut?.lpPairName == 'Delta neutral vault'"> Current APY <br> 0%</div>
                 </div>
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-4">
                   <div>Assets <br><img src="assets/icon/cake.png" style=" width: 25px;
                     margin-right: -10px;"><img src="assets/icon/busd.png" style="width: 25px;margin-right: 16px;"></div>
-                  <div> Protocol <br><img src="assets/icon/cake.png" style="width: 25px;margin-right: 16px;"></div>
+                  <div class="txt_algn_rgt"> Protocol <br><img src="assets/icon/cake.png" style="width: 25px;"></div>
                 </div>
 
                 <div  style="display: flex;justify-content: space-around;">
