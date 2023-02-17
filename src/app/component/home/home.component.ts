@@ -202,14 +202,14 @@ debugger
     this.valutAddressList = this.valutAddressList.filter(b => b.owner == sessionStorage.getItem("account"));
 
     if(this.valutAddressList.length > 0){
-    // this.valutAddressList.push({
-    //   "address" : "0x1aba4273eDA950c1fd842d872AE1Ab21C5012664",
-    //   "balance": 0,
-    //   "lpPairAddress": "0x804678fa97d91B974ec2af3c843270886528a9E6",
-    //   "lpPairName": "Delta neutral vault",
-    //   "type": "Whitelisted",
-    //   "name": "Delta neutral vault",
-    // })
+    this.valutAddressList.push({
+      "address" : "0x1aba4273eDA950c1fd842d872AE1Ab21C5012664",
+      "balance": 0,
+      "lpPairAddress": "0x804678fa97d91B974ec2af3c843270886528a9E6",
+      "lpPairName": "Delta neutral vault",
+      "type": "Whitelisted",
+      "name": "Delta neutral vault",
+    })
   }
 
 
