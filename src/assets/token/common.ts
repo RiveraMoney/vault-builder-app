@@ -1,4 +1,5 @@
 import { ChainId, ERC20Token } from '@pancakeswap/sdk'
+import { USDC_RINKEBY } from 'dist/web3-modal/assets/token/common'
 
 export const CAKE_MAINNET = new ERC20Token(
   ChainId.BSC,
@@ -105,14 +106,14 @@ export const BUSD_ETH = new ERC20Token(
   'https://www.paxos.com/busd/',
 )
 
-// export const BUSD_RINKEBY = new ERC20Token(
-//   ChainId.RINKEBY,
-//   '0x4e2442A6f7AeCE64Ca33d31756B5390860BF973E',
-//   18,
-//   'BUSD',
-//   'Binance USD',
-//   'https://www.paxos.com/busd/',
-// )
+export const BUSD_RINKEBY = new ERC20Token(
+  ChainId.RINKEBY,
+  '0x4e2442A6f7AeCE64Ca33d31756B5390860BF973E',
+  18,
+  'BUSD',
+  'Binance USD',
+  'https://www.paxos.com/busd/',
+)
 
 export const BUSD_GOERLI = new ERC20Token(
   ChainId.GOERLI,
@@ -125,7 +126,7 @@ export const BUSD_GOERLI = new ERC20Token(
 
 export const BUSD: Record<ChainId, ERC20Token> = {
   [ChainId.ETHEREUM]: BUSD_ETH,
-  // [ChainId.RINKEBY]: BUSD_RINKEBY,
+  [ChainId.RINKEBY]: BUSD_RINKEBY,
   [ChainId.GOERLI]: BUSD_GOERLI,
   [ChainId.BSC]: BUSD_BSC,
   [ChainId.BSC_TESTNET]: BUSD_TESTNET,
@@ -140,7 +141,7 @@ export const USDC = {
   [ChainId.BSC]: USDC_BSC,
   [ChainId.BSC_TESTNET]: USDC_TESTNET,
   [ChainId.ETHEREUM]: USDC_ETH,
-  // [ChainId.RINKEBY]: USDC_RINKEBY,
+  [ChainId.RINKEBY]: USDC_RINKEBY,
   [ChainId.GOERLI]: USDC_GOERLI,
 }
 

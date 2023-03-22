@@ -33,6 +33,8 @@ export class VaultDetailsComponent implements OnInit {
   public stepWiseToshow: number = 0;
   public netApyToShow: number = 0;
   public rangeValue: number = 0;
+  public quoteTokenImage:any;
+  public tokenImage: any;
   constructor(
     private valutDetilsService: ValutDetilsService,
     private fb: FormBuilder,
@@ -144,6 +146,8 @@ export class VaultDetailsComponent implements OnInit {
       chain: 'Pancakeswap',
       apy: this.apr
     });
+    this.tokenImage = this.selectedPool.tokenImage,
+    this.quoteTokenImage = this.selectedPool.quoteTokenImage,
     this.calculation();
     $('#profile').modal('show');
   }

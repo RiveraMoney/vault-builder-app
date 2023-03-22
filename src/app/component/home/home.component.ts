@@ -73,6 +73,9 @@ export class HomeComponent implements OnInit {
   public displayMetamaskWarningPopup = false
   public BASE_CURRENCY: string  = "0x55d398326f99059fF775485246999027B3197955";     //BUSD for Binance Smart chain
   public pancakeFactoryContractAbi: any;
+  public imageList: any;
+  public quoteTokenImage: any;
+  public tokenImage: any;
   constructor(
     private web3Service: Web3Service,
     private router: Router,
@@ -114,6 +117,13 @@ closeWarningDialog(){
 }
 
   async getAbiValue(){
+
+    const assetsImageURL = this.apiService.assetsImage;
+    //get cake abi value from artifacts folder
+    (await this.commonService.getAbiJSON(assetsImageURL)).subscribe(async (e) => {
+      this.imageList = e;
+    });
+
     //get factory abi url from api service
     const factoryAbiUrl = this.apiService.pancakeVaultFactoryV1Abi;
     //get factory abi value from artifacts folder
@@ -139,7 +149,7 @@ closeWarningDialog(){
     const pancakeSwapFactoryV2Url = this.apiService.pancakeSwapFactoryV2Abi;
     //get cake abi value from artifacts folder
     (await this.commonService.getAbiJSON(pancakeSwapFactoryV2Url)).subscribe(async (e) => {
-      debugger
+
       this.pancakeFactoryContractAbi = e;
     });
   }
@@ -173,11 +183,13 @@ closeWarningDialog(){
   }
 
   async getDeployedValut(){
-debugger
+
     const contract = this.getContract(this.globalService.deployedContract,this.factoryAbi,this.web3Provider.getSigner());
 
     this.valutAddressList = await contract['listAllVaults']();
     this.valutAddressList = this.valutAddressList?.map(async e =>{
+
+
       const contract = this.getContract(e,this.valutAbi,this.web3Provider.getSigner());
       const stack = await contract['stake']();
       const name = await contract['name']();
@@ -186,14 +198,19 @@ debugger
       const bal = await this.lpTokenToBaseTokenConversionRate(stack);
       console.log("balance", bal);
       const balance = await contract['balance']();
+      const quoteTokenImageValue = this.imageList?.find((a:any) => a.asset_id.toLowerCase() == farms.find(e => e.lpAddress == stack)?.quoteToken.symbol.toLowerCase());
+       const tokenImageValue = this.imageList?.find((a:any) => a.asset_id.toLowerCase() == farms.find(e => e.lpAddress == stack)?.token.symbol.toLowerCase());
       return {
         "address": e,
         "balance": (balance/Math.pow(10, 18) * bal).toFixed(2),
         "lpPairAddress": stack,
         "lpPairName": farms.find(e => e.lpAddress == stack)?.lpSymbol,
+        "valutType": "Auto-compounding vault",
         "type": "Private",
         "name": name,
-        "owner": owner
+        "owner": owner,
+        "quoteTokenImage": quoteTokenImageValue.url,
+        "tokenImage": tokenImageValue.url
       };
     });
 
@@ -204,11 +221,14 @@ debugger
     if(this.valutAddressList.length > 0){
     this.valutAddressList.push({
       "address" : "0x1aba4273eDA950c1fd842d872AE1Ab21C5012664",
-      "balance": 0,
+      "balance": 160928,
       "lpPairAddress": "0x804678fa97d91B974ec2af3c843270886528a9E6",
       "lpPairName": "Delta neutral vault",
-      "type": "Whitelisted",
-      "name": "Delta neutral vault",
+      "valutType": "Auto-compounding vault",
+      "type": "KYC'ed",
+      "name": "Stablecoin LP farming",
+      "quoteTokenImage": "/assets/icon/thether_clr_round.png",
+      "tokenImage": "/assets/cryotpImage/BUSD.png"
     })
   }
 
@@ -260,6 +280,14 @@ debugger
 
   async showBasicDialog(valut: any, type: any) {
     console.log("valut", valut);
+    this.isApprove = false;
+    this.valutCreateForm.reset();
+
+    this.valutCreateForm.patchValue({
+      amount: [''],
+      permission: ['private'],
+    });
+
     this.isDeposit = type == 'deposit' ? true : false;
     // if(type == 'deposit'){
     //   this.isDeposit = true;
@@ -270,6 +298,8 @@ debugger
     this.displayBasic = true;
     this.lpAddress = valut?.lpPairAddress;
     this.lpPairName = valut?.lpPairName;
+    this.tokenImage = valut?.tokenImage;
+    this.quoteTokenImage = valut?.quoteTokenImage;
     const pairName = this.lpPairName.split(" ");
     const firstName = pairName[0].split("-");
     this.lpPairToken1Name = firstName[0];
@@ -348,7 +378,7 @@ goToSetup(type: any){
 async lpTokenToBaseTokenConversionRate(lpToken: string): Promise<number> {
   console.log(`Calculating value of lp token: ${lpToken}`);
   const lpContract = this.getContract(lpToken,  this.lpAbi, this.web3Provider.getSigner());
-  debugger
+
   const reserves = await lpContract['getReserves']();
   console.log(`Reserves: ${reserves}`);
   const reserve0 = reserves._reserve0;

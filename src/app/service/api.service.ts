@@ -12,4 +12,5 @@ export class ApiService {
   pancakeLpsAbi = 'assets/abiLists/pancakeLpsAbi.json'
   pancakeFarmList = 'assets/constants/farms'
   pancakeSwapFactoryV2Abi = 'assets/abiLists/pancakeSwapFactoryV2.json'
+  assetsImage = 'assets/imageList/crypto.json'
 }

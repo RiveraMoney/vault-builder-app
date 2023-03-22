@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ethers } from 'ethers';
-import { LpListService } from 'src/app/service/lp-list.service';
 import { Web3Service } from 'src/app/service/web3.service';
 import { FixedNumber, BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { parseUnits } from '@ethersproject/units';
@@ -1801,6 +1800,7 @@ export class ValutListComponent implements OnInit {
   public LP_HOLDERS_FEE = 0.0017
   public WEEKS_IN_A_YEAR = 52.1429;
   getAprsForStableFarmValue: any;
+  imageList: any;
   constructor(
     private fb: FormBuilder,
     private web3Service: Web3Service,
@@ -1815,8 +1815,6 @@ export class ValutListComponent implements OnInit {
     private getBlockAtTimestampService: GetBlockAtTimestampService
 
   ) {
-
-
   }
 
   ngOnInit(): void {
@@ -1831,11 +1829,14 @@ export class ValutListComponent implements OnInit {
     this.init();
   }
 
+
   selectProduct(lp: any) {
+    debugger
     this.selectedPool = lp;
     this.valutDetilsService.setLPPool(lp);
     this.router.navigate(['/vaultDetails']);
   }
+
   async deploy() {
     const contract = new ethers.Contract(
       this.globalService.deployedContract,
@@ -1872,6 +1873,15 @@ export class ValutListComponent implements OnInit {
     // (await this.web3Service.getAbiJSON('lpAbi.json')).subscribe(async (e) => {
     //   this.cakeAbi = e;
     // });
+
+
+    const assetsImageURL = this.apiService.assetsImage;
+    //get cake abi value from artifacts folder
+    (await this.commonService.getAbiJSON(assetsImageURL)).subscribe(async (e) => {
+      this.imageList = e;
+      console.log("e olo", this.imageList);
+    });
+
 
     //load provider
     await this.web3Service.connectWallet().then((e) => {
@@ -2039,7 +2049,7 @@ export class ValutListComponent implements OnInit {
     console.log('farmsData farmsData with liqudity', farmsData);
 
     this.getFarmsPrices(farmsData, ChainId.BSC);
-    this.updateLPsAPR(ChainId.BSC, farmsData);
+    //this.updateLPsAPR(ChainId.BSC, farmsData);
   }
 
   public async fetchMasterChefData() {
@@ -2462,6 +2472,14 @@ export class ValutListComponent implements OnInit {
       aaa.filter((e: any) => e != '0' || e.pid !== 0)
     );
     this.lpList = aaa.filter((e: any) => e != '0');
+    this.lpList.forEach((element: any) => {
+      const quoteTokenImageValue = this.imageList?.find((e:any) => e.asset_id.toLowerCase() == element.quoteToken.symbol.toLowerCase());
+      const tokenImageValue = this.imageList?.find((e:any) => e.asset_id.toLowerCase() == element.token.symbol.toLowerCase());
+      element.tokenImage = tokenImageValue?.url;
+      element.quoteTokenImage = quoteTokenImageValue?.url;
+    });
+    this.lpList.map((obj: any) => ({ ...obj, tokenImage: this.imageList.find((e: any) => e.asset_id.toLowerCase() == obj.token.symbol.toLowerCase()).url }));
+    console.log('farmsWithPrices quteToke with tokenImage',this.lpList);
     this.loading = false;
   }
 
@@ -2699,7 +2717,7 @@ export class ValutListComponent implements OnInit {
         const stableAprsMap = stableAprs.reduce(
           (result, apr, index) => ({
             ...result,
-            [stableFarms[index].lpAddress]: apr.toTwos(2).toNumber(),
+            [stableFarms[index].lpAddress]: apr.toNumber(),
           }),
           {} as AprMap,
         )

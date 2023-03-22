@@ -4,20 +4,21 @@
             <div class="col-md-6">
                 <div style="text-decoration: underline;
                 font-size: 18px;
-                font-weight: 600;">ETH (Covered Call) <span><img src="assets/icon/ShareNetwork.png" style="width: 25px;margin-left: 25px;"></span></div>
-                <div style="margin-bottom: 10px;font-size: 14px;">DeFi Options</div>
-                <div>Pools: &nbsp;&nbsp;&nbsp;&nbsp; ETH-USDC</div>
-                <div style="margin-bottom: 15px;">Access: &nbsp;&nbsp; Whitelisted &nbsp;&nbsp; <span style="font-size: 14px;text-decoration: underline;"> Details</span></div>
+                font-weight: 600;">Stablecoin LP farming (Demo page) <span><img src="assets/icon/ShareNetwork.png" style="width: 25px;margin-left: 25px;"></span></div>
+                <div style="margin-bottom: 10px;font-size: 14px;">Auto-compounding</div>
+                <div>Pools: &nbsp;&nbsp;&nbsp;&nbsp; USDT-BUSD (DEX Liquidity)</div>
+                <div>Staking: &nbsp;&nbsp;&nbsp;&nbsp; PancakeSwap</div>
+                <div style="margin-bottom: 15px;">Access: &nbsp;&nbsp; KYC'ed</div>
                 <div><img src="assets/icon/Vector.png"> Add notes</div>
                 <div  style="    display: flex;
                 justify-content: space-between;
                 margin-top: 15px;
-                width: 35%;">
+                width: 65%;">
                   <div>
-                   <button class="btn btn_cstm">Deposit</button>
+                   <button class="btn btn_cstm">Whitelist Users</button>
                   </div>
                   <div>
-                   <button class="btn btn_cstm">Withdraw</button>
+                   <button class="btn btn_cstm">Vault Settings</button>
                   </div>
                  </div>
             </div>
@@ -32,10 +33,10 @@
                             width: 14px;"></th>
                       </tr>
                       <tr>
-                        <td>$151,237</td>
-                        <td>19.67%</td>
+                        <td>$160,928</td>
+                        <td>23.84%</td>
                         <td>0.05%</td>
-                        <td>8.2 <img src="assets/icon/network.png" style="margin-top: -8px;
+                        <td>9.1<img src="assets/icon/network.png" style="margin-top: -8px;
                             width: 14px;
                             margin-left: 5px;"></td>
                       </tr>
@@ -47,7 +48,7 @@
                         <div>Vault contract: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="assets/icon/link.png"></div>
                     </div>
                     <div>
-                        <div>Asset(s) contract: &nbsp;&nbsp; <span style="text-decoration: underline;">CAKE, BUSD</span></div>
+                        <div>Asset(s) contract: &nbsp;&nbsp; <span style="text-decoration: underline;">USDT, BUSD</span></div>
                     </div>
                 </div>
                 </div>
@@ -105,7 +106,7 @@
       </div>
   </div>
     <div style="   margin-top: 50px;">
-        <img src="assets/icon/valutSetup_back.svg" style="width: 100%;">
+        <img src="assets/icon/valutSetup_back.png" style="width: 100%;">
     </div>
     <div *ngIf="!isPrivateValut">
         <div class="pTableCustom" style="    border-radius: 0px;
@@ -122,15 +123,15 @@
 		<div class="p-d-flex" style="    display: flex;
     justify-content: space-between;color: white">
         <div>
-            <span>Whitelisted Addresses</span>
+            <span>Whitelisted / KYC'ed Addresses:</span>
         </div>
         <div>
             <span class="p-input-icon-left p-ml-auto">
-                <input pInputText type="text" placeholder="Paste Address Here" />
+                <input pInputText type="text" placeholder="Paste a new address here" />
 
-                <button class="btn" style="    background: white;
+                <button class="btn btn_white" style="background: white;
                 margin-left: 20px;
-                margin-top: -5px;">Whitelist New</button>
+                margin-top: -5px;">Whitelist</button>
             </span>
         </div>
 		</div>
@@ -309,7 +310,7 @@
                 <button class="btn btn_cstm"><img src="assets/icon/action1.png" style="margin-right: 10px;width: 18px;"> Rename Vault</button>
             </div>
             <div>
-                <button class="btn btn_cstm"><img src="assets/icon/action2.png" style="margin-right: 10px;width: 18px;"> Duplicate Vault</button>
+                <button class="btn btn_cstm"><img src="assets/icon/action2.png" style="margin-right: 10px;width: 18px;"> Manage Fees</button>
             </div>
             <div>
                 <button class="btn btn_cstm"><img src="assets/icon/action3.png" style="margin-right: 10px;width: 18px;"> Lock Deposit</button>

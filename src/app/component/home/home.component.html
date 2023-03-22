@@ -18,10 +18,12 @@
   </div>
 
   <div *ngIf="isLogin">
-    <div *ngIf="!isValutCreated" style="margin-top: 15%; text-align: center">
-      <div class="cnt_btn_txt">This wallet address is not whitelisted in any Rivera vault.</div>
+    <div *ngIf="!isValutCreated" style="margin-top: 12%; text-align: center">
+      <div class="cnt_btn_txt_first">This wallet address is not whitelisted in any Rivera vault.</div>
+      <div class="cnt_btn_txt_second">Fund managers?</div>
+      <div class="cnt_btn_txt">Build your auto-compounding vault</div>
       <button class="mb-3" class="btn btn-custom" (click)="createValut()">
-        Create New Vault
+        Create Vault
       </button>
     </div>
     <div *ngIf="isValutCreated">
@@ -33,19 +35,19 @@
       <div class="row mt-4">
         <div class="col-md-4 box_outer">
           <div class="first_section_box1 first_section_box1_back_img" style="    font-size: 20px;">
-            <div>Vault Holdings</div>
+            <div>Portfolio holdings</div>
             <div style="font-size: 26px;font-weight:600">$ 150,750.22</div>
           </div>
           <div class="second_section_box1 mt-4" style="padding: 5px 10px;">
             <div>
-              <span>Overall Returns</span><br />
+              <span>Overall returns</span><br />
               <span  class="third_text_color">$14,680.12</span><br />
               <span  class="third_text_color">+36.71%</span>
             </div>
             <div>
               <div style="width: 150px;
               margin-right: -35px;margin-bottom: 8px;">
-                <img src="assets/icon/demo3.png" style="    width: 150px;">
+                <img src="assets/icon/demoOnly.png" style="    width: 150px;">
               </div>
              <img src="assets/icon/dollar_round.png" style="width: 35px;margin-right: 5px;">
              <img src="assets/icon/btc_round.png" style="width: 35px;margin-right: 5px;">
@@ -75,16 +77,16 @@
               <div>$ 7,500.00</div>
             </div>
             <div class="second_section_box1 mb-4">
-              <div><img src="assets/icon/matic_clr_round.png" style="width: 25px;margin-right: 6px;"> MATIC</div>
+              <div><img src="assets/cryotpImage/CAKE.png" style="width: 25px;margin-right: 6px;"> CAKE</div>
               <!-- <div>MATIC</div> -->
-              <div>Polygon</div>
+              <div>Cake</div>
               <div>7,326.00</div>
               <div>$ 5,860.81</div>
             </div>
             <div class="second_section_box1 mb-4">
-              <div><img src="assets/icon/sol_clr_round.png" style="width: 25px;margin-right: 6px;"> SOL</div>
+              <div><img src="assets/cryotpImage/BUSD.png" style="width: 25px;margin-right: 6px;"> BUSD</div>
               <!-- <div>SOL</div> -->
-              <div>Solana</div>
+              <div>Binance USD</div>
               <div>187.22</div>
               <div>$ 5,429.58</div>
             </div>
@@ -98,21 +100,21 @@
                   <div (click)="goToSetup(valut?.type)" style="cursor: pointer;"><img src="assets/icon/networkIcon.png" style="    width: 30px;
                     margin-right: 16px;">{{valut?.name}}</div>
                   <!-- <div *ngIf="valut?.lpPairName != 'Delta neutral vault'"><img src="assets/icon/ShareNetwork.png" style="width: 25px;"> </div> -->
-                  <div *ngIf="valut?.lpPairName == 'Delta neutral vault'"><img src="assets/icon/demoOnly.png" style="    width: 150px;
+                  <div *ngIf="valut?.lpPairName == 'Delta neutral vault'"><img src="assets/icon/demo3.png" style="    width: 150px;
                     margin-right: -52px;"></div>
                 </div>
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
-                  <div>Auto-compounding vault</div>
+                  <div>{{valut?.valutType}}</div>
                   <div>{{valut?.type}}</div>
                 </div>
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-3">
-                  <div>Balance <br>${{valut?.balance}}</div>
-                  <div class="txt_algn_rgt" *ngIf="valut?.lpPairName != 'Delta neutral vault'"> Current APY <br> 19.67%</div>
-                  <div class="txt_algn_rgt" *ngIf="valut?.lpPairName == 'Delta neutral vault'"> Current APY <br> 0%</div>
+                  <div>TVL <br>${{valut?.balance}}</div>
+                  <div class="txt_algn_rgt" *ngIf="valut?.lpPairName != 'Delta neutral vault'"> Current APY <br> 27.03%</div>
+                  <div class="txt_algn_rgt" *ngIf="valut?.lpPairName == 'Delta neutral vault'"> Current APY <br> 23.84%</div>
                 </div>
                 <div  style="display: flex; justify-content: space-between;align-items: center;" class="mb-4">
-                  <div>Assets <br><img src="assets/icon/cake.png" style=" width: 25px;
-                    margin-right: -10px;"><img src="assets/icon/busd.png" style="width: 25px;margin-right: 16px;"></div>
+                  <div>Assets <br><img [src]="valut.quoteTokenImage" style=" width: 25px;
+                    margin-right: -10px;"><img [src]="valut.tokenImage" style="width: 25px;margin-right: 16px;"></div>
                   <div class="txt_algn_rgt"> Protocol <br><img src="assets/icon/cake.png" style="width: 25px;"></div>
                 </div>
 
@@ -129,7 +131,7 @@
                 <div style="position: absolute;
                 top: 22px;
                 right: -29px;">
-                  <img src="assets/icon/demo3.png" style="    width: 150px;">
+                  <img src="assets/icon/demoOnly.png" style="    width: 150px;">
                 </div>
                 <div  style="display: flex; justify-content: space-between;align-items: center; " class="mb-3">
                   <div style="font-weight: 600;margin-bottom: 10px;    font-size: 18px;">Risk Notifications</div>
@@ -154,7 +156,7 @@
                 <div style="position: absolute;
                 top: 22px;
                 right: -29px;">
-                  <img src="assets/icon/demo3.png" style="    width: 150px;">
+                  <img src="assets/icon/demoOnly.png" style="    width: 150px;">
                 </div>
                 <div  style="display: flex; justify-content: space-between;align-items: center; " class="mb-3">
                   <div style="font-weight: 600;margin-bottom: 10px;    font-size: 18px;">Strategy of the day</div>
@@ -212,8 +214,8 @@
                 <div class="col-sm-12 radioButton_height">
                   <label>
                     <input type="radio" value="private" formControlName="permission">
-                      <span style="margin-left: 5px;"><img src="assets/icon/cake.png" style="width: 20px;margin-left: 5px;margin-right: 2px;">
-                        <img src="assets/icon/busd.png" style="width: 18px;margin-left: -8px;margin-right: 2px;">
+                      <span style="margin-left: 5px;"><img [src]="quoteTokenImage" style="width: 20px;margin-left: 5px;margin-right: 2px;">
+                        <img [src]="tokenImage" style="width: 18px;margin-left: -8px;margin-right: 2px;">
                         <span> {{lpPairName}}</span>
                       </span>
                   </label>
@@ -221,7 +223,7 @@
                 <div class="col-sm-12 radioButton_height">
                   <label>
                     <input type="radio" value="whitelisted" formControlName="permission" [attr.disabled]="true">
-                      <span style="margin-left: 5px;"><img src="assets/icon/cake.png" style="width: 20px;
+                      <span style="margin-left: 5px;"><img [src]="tokenImage" style="width: 20px;
                         margin-left: 5px;
                         margin-right: 2px;">{{lpPairToken1Name}}</span>
                   </label>
@@ -229,7 +231,7 @@
                 <div class="col-sm-12 radioButton_height">
                   <label>
                     <input type="radio" value="whitelisted2" formControlName="permission" [attr.disabled]="true">
-                      <span style="margin-left: 5px;"><img src="assets/icon/busd.png" style="width: 18px;
+                      <span style="margin-left: 5px;"><img [src]="quoteTokenImage" style="width: 18px;
                         margin-left: 5px;
                         margin-right: 2px;">{{lpPairToken2Name}}</span>
                   </label>
@@ -291,11 +293,11 @@
             <!-- <img class="img-fluid logo-sz" src="https://issuerpanel.authlink.com/assets/img/ICONS/right_tick.png" alt=""> -->
         </div>
         <ng-container class="mb-2">
-          <h4 *ngIf="isDeposit" class="text-center" style="font-weight: 600;font-size: 20px;">Your deposit is in progress.</h4>
-          <h4 *ngIf="!isDeposit" class="text-center" style="font-weight: 600;font-size: 20px;">Your withdraw is in progress.</h4>
-          <h6 class="text-center mb-4" style="font-size: 12px;">Waiting for transaction confirmation on Blockchain. </h6>
+          <h4 *ngIf="isDeposit" class="text-center" style="font-weight: 600;font-size: 20px;">Your deposit is successful.</h4>
+          <h4 *ngIf="!isDeposit" class="text-center" style="font-weight: 600;font-size: 20px;">Your withdraw is successful.</h4>
+          <!-- <h6 class="text-center mb-4" style="font-size: 12px;">Waiting for transaction confirmation on Blockchain. </h6> -->
       </ng-container>
-        <button type="button" (click)="refresh()" class="btn btn-custom mb-2">Refresh</button>
+        <button type="button" (click)="refresh()" class="btn btn-custom mb-2 mt-2">Refresh</button>
     </div>
     </div>
   </div>

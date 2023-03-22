@@ -4,8 +4,8 @@
         margin-left: 5px;
         margin-bottom: 10px;
         font-size: 22px;
-        text-align: center;">Create auto-compounding vault</div>
-        <div class="text-center" style="color: white;">Choose protocol to farm LP tokens</div>
+        text-align: center;">Select a staking pool to farm LP tokens</div>
+        <div class="text-center" style="color: white;">Need help? See our <a target="_blank" href="https://rivera.gitbook.io/docs/guides/build-your-farming-vault">vault builder guide</a></div>
     </div>
     <div class="row justify-content-center">
         <div class="col-md-10">
@@ -96,30 +96,40 @@
         </div>
         <ng-container class="mb-2">
           <div class="mb-4">
-            <span style="font-weight: 600; font-size: 18px"  >Create Vault</span >
+            <!-- <span style="font-weight: 600; font-size: 18px"  >Create Vault</span > -->
+              <div style="color: white;
+              margin-left: 5px;
+              margin-bottom: 10px;
+              font-size: 22px;
+              text-align: center;">Select Vault Settings</div>
+              <div class="text-center" style="color: white;margin-bottom: 30px;">Need help? See our <a target="_blank" href="https://rivera.gitbook.io/docs/guides/build-your-farming-vault">vault builder guide</a></div>
           </div>
           <div>
             <form [formGroup]="valutCreateForm">
               <div class="form-group row mb-2">
                 <label for="vaultName" class="col-sm-3 col-form-label">Vault Name</label>
                 <div class="col-sm-9">
-                  <input type="input" class="form-control" id="vaultName" placeholder="Vault Name" formControlName="vaultName">
+                  <input type="input" class="form-control" id="vaultName" placeholder="Stablecoin LP farming" formControlName="vaultName">
                 </div>
               </div>
               <div class="form-group row align-items-center">
                 <label for="permission" class="col-sm-3 col-form-label">Permission</label>
-                <div class="col-sm-4">
-                  <!-- <p-radioButton name="groupname" value="val1" formControlName="permission">a</p-radioButton> -->
+                <div class="col-sm-3">
                   <label>
                     <input type="radio" value="private" formControlName="permission">
                       <span style="margin-left: 5px;">Private</span>
                   </label>
                 </div>
-                <div class="col-sm-4">
-                  <!-- <p-radioButton name="groupname" value="val2" formControlName="permission">b</p-radioButton> -->
+                <div class="col-sm-3">
+                  <label>
+                    <input type="radio" value="KYCED" formControlName="permission" [attr.disabled]="true">
+                      <span style="margin-left: 5px;">KYC'ed</span>
+                  </label>
+                </div>
+                <div class="col-sm-3">
                   <label>
                     <input type="radio" value="whitelisted" formControlName="permission" [attr.disabled]="true">
-                      <span style="margin-left: 5px;">Whitelisted</span>
+                      <span style="margin-left: 5px;">Public</span>
                   </label>
                 </div>
               </div>
@@ -131,7 +141,9 @@
               </div>
               <div class="form-group row">
                 <label for="lpPair" class="col-sm-3 col-form-label">LP Pair</label>
-                <div class="col-sm-9">
+                <div class="col-sm-9" style="display: flex;align-items: center;">
+                  <img [src]="quoteTokenImage" style="width: 20px;height:20px;margin-left: 5px;margin-right: 2px;">
+                        <img [src]="tokenImage" style="width: 18px;height:18px;margin-left: -8px;margin-right: 10px;">
                   <input type="text" readonly class="form-control-plaintext" id="lpPair" formControlName="lpPair">
                 </div>
               </div>
@@ -159,7 +171,7 @@
               <div class="btn_pos mt-4 mb-2">
                 <div> <button class="btn btn-custom" type="button" (click)="deploy()"><img *ngIf="btn_loader" src="assets/icon/btn_loader.gif" style="width: 18px;
                   margin-right: 5px;">Deploy</button></div>
-                <div> <button class="btn btn-custom" type="button" (click)="closePopup()">Back</button></div>
+                <div> <button class="btn btn_cstm" type="button" (click)="closePopup()">Back</button></div>
 
               </div>
             </form>
@@ -176,9 +188,8 @@
             <!-- <img class="img-fluid logo-sz" src="https://issuerpanel.authlink.com/assets/img/ICONS/right_tick.png" alt=""> -->
         </div>
         <ng-container class="mb-2">
-          <h4 class="text-center" style="font-weight: 600;font-size: 20px;">Your vault deployment is in progress</h4>
-          <h6 class="text-center mb-4" style="font-size: 12px;">Strategy Note:
-            This action is deploying an automated vault that adds liquidity to the CAKE-BUSD LP pool on Pancakeswap DEX. Received LP tokens will be staked at Pancakeswap to farm CAKE. Farming rewards will be harvested periodically and exchanged for LP tokens to add to the principal amount. </h6>
+          <h4 class="text-center" style="font-weight: 600;font-size: 20px;">Your vault deployment is successful</h4>
+          <h6 class="text-center mb-4" style="font-size: 12px;">Strategy Note: You have deployed an automated vault that adds liquidity to the selected LP pool on Pancakeswap DEX. Received LP tokens will be staked at Pancakeswap to farm CAKE. Farming rewards will be harvested periodically and exchanged for LP tokens to add to the principal amount. </h6>
       </ng-container>
         <button type="button" (click)="goToDashboard()" class="btn btn-custom mb-2">Go to Dashboard</button>
     </div>

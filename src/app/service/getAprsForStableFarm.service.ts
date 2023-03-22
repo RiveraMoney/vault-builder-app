@@ -67,7 +67,7 @@ export class GetAprsForStableFarmServices {
   }
 
   public async getAprsForStableFarm(stableFarm: any): Promise<BigNumber> {
-debugger
+
     // this.apollo.create({
     //   cache: new InMemoryCache(),
     //   link: this.httpLink.create({ uri: 'https://api.thegraph.com/subgraphs/name/pancakeswap/exchange-stableswap' }),
@@ -101,13 +101,13 @@ debugger
         },
       })
       .toPromise();
-      debugger
+
       const virtualPrice = (aa as any).data.virtualPriceAtLatestBlock[0]?.virtualPrice;
       const preVirtualPrice = (aa as any).data.virtualPriceOneDayAgo[0]?.virtualPrice;
 
       const current = new BigNumber(virtualPrice);
       const prev = new BigNumber(preVirtualPrice);
-debugger
+
       return current.minus(prev).div(prev);
     } catch (error) {
       console.error(error, '[LP APR Update] getAprsForStableFarm error');

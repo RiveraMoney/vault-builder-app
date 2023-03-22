@@ -59,7 +59,13 @@ export class NavBarComponent implements OnInit {
         label:'Create Vault',
         // icon:'pi pi-home',
         routerLink: '/vault'
-     }];
+     },
+     {
+      label:'Docs',
+      // icon:'pi pi-home',
+      url: 'https://rivera.gitbook.io/docs/ '
+   }
+    ];
       this.connectWallet();
     }
   }

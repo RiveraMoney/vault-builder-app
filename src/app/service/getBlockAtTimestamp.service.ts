@@ -154,7 +154,7 @@ export class GetBlockAtTimestampService {
   }
 
   resetUri(newUri: string) {
-    debugger
+
    // this.apollo.getClient().resetStore();
     // this.apollo.create({
     //   link: this.httpLink.create({uri: newUri}),
